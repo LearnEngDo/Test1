@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bahasa Gaul – Indonesian Everyday Language</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@400;500;600&display=swap');
+
+  :root {
+    --ink: #1a1a2e;
+    --accent: #e07a5f;
+    --accent2: #3d405b;
+    --teal: #81b29a;
+    --cream: #f9f3ee;
+    --pale: #f2ede8;
+    --muted: #8a7f78;
+    --card: #ffffff;
+    --border: #e3dbd4;
+    --correct: #81b29a;
+    --wrong: #e07a5f;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--cream);
+    color: var(--ink);
+    line-height: 1.6;
+  }
+
+  /* HERO */
+  .hero {
+    background: var(--accent2);
+    color: #fff;
+    padding: 56px 32px 48px;
+    text-align: center;
+  }
+  .hero-eyebrow {
+    font-size: 12px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--teal);
+    margin-bottom: 12px;
+    font-weight: 600;
+  }
+  .hero h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(2rem, 6vw, 3.2rem);
+    line-height: 1.15;
+    margin-bottom: 14px;
+  }
+  .hero h1 span { color: var(--accent); }
+  .hero p {
+    font-size: 1rem;
+    color: rgba(255,255,255,0.7);
+    max-width: 520px;
+    margin: 0 auto 24px;
+  }
+  .level-badge {
+    display: inline-block;
+    background: rgba(129,178,154,0.25);
+    border: 1px solid var(--teal);
+    color: var(--teal);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    padding: 5px 14px;
+    border-radius: 20px;
+  }
+
+  /* NAV TABS */
+  .nav-tabs {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 20px 16px;
+    background: var(--pale);
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .tab-btn {
+    background: var(--card);
+    border: 1.5px solid var(--border);
+    color: var(--muted);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 7px 16px;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.18s;
+  }
+  .tab-btn:hover { border-color: var(--accent); color: var(--accent); }
+  .tab-btn.active {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #fff;
+  }
+
+  /* SECTIONS */
+  .section { display: none; padding: 40px 16px 60px; max-width: 760px; margin: 0 auto; }
+  .section.active { display: block; }
+
+  .section-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.7rem;
+    color: var(--accent2);
+    margin-bottom: 6px;
+  }
+  .section-sub {
+    font-size: 0.88rem;
+    color: var(--muted);
+    margin-bottom: 28px;
+  }
+
+  /* VOCAB CARDS */
+  .vocab-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 14px;
+    margin-bottom: 32px;
+  }
+  .vocab-card {
+    background: var(--card);
+    border: 1.5px solid var(--border);
+    border-radius: 12px;
+    padding: 16px 16px 14px;
+    cursor: pointer;
+    transition: transform 0.15s, box-shadow 0.15s, border-color 0.15s;
+    position: relative;
+  }
+  .vocab-card:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,0.08); border-color: var(--accent); }
+  .vocab-card.flipped { border-color: var(--teal); }
+  .vocab-word {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.3rem;
+    color: var(--accent);
+    margin-bottom: 2px;
+  }
+  .vocab-tag {
+    font-size: 10px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    font-weight: 600;
+    color: var(--muted);
+    margin-bottom: 8px;
+  }
+  .vocab-meaning {
+    font-size: 0.9rem;
+    color: var(--ink);
+    font-weight: 500;
+  }
+  .vocab-note {
+    display: none;
+    font-size: 0.82rem;
+    color: var(--muted);
+    margin-top: 6px;
+    padding-top: 6px;
+    border-top: 1px dashed var(--border);
+    line-height: 1.5;
+  }
+  .vocab-card.flipped .vocab-note { display: block; }
+  .flip-hint {
+    position: absolute;
+    top: 10px; right: 12px;
+    font-size: 10px;
+    color: var(--border);
+  }
+
+  /* DIALOGUE */
+  .dialogue-box {
+    background: var(--card);
+    border-radius: 14px;
+    border: 1.5px solid var(--border);
+    overflow: hidden;
+    margin-bottom: 24px;
+  }
+  .dialogue-header {
+    background: var(--accent2);
+    color: #fff;
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    font-weight: 600;
+    padding: 10px 18px;
+  }
+  .dialogue-body { padding: 20px 18px; }
+  .line { display: flex; gap: 12px; margin-bottom: 12px; align-items: flex-start; }
+  .line:last-child { margin-bottom: 0; }
+  .speaker {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    min-width: 22px;
+    padding-top: 2px;
+    color: var(--accent);
+  }
+  .speaker.b { color: var(--teal); }
+  .line-text { font-size: 0.9rem; color: var(--ink); line-height: 1.55; }
+  .line-text .trans {
+    display: block;
+    font-size: 0.8rem;
+    color: var(--muted);
+    margin-top: 2px;
+    font-style: italic;
+  }
+  .highlight {
+    background: rgba(224,122,95,0.12);
+    border-radius: 4px;
+    padding: 0 3px;
+    font-weight: 600;
+    color: var(--accent);
+  }
+
+  /* CATEGORY LABEL */
+  .cat-label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 28px 0 14px;
+  }
+  .cat-label span {
+    background: var(--accent2);
+    color: #fff;
+    font-size: 10px;
+    letter-spacing: 2px;
+    font-weight: 700;
+    text-transform: uppercase;
+    padding: 4px 12px;
+    border-radius: 20px;
+  }
+  .cat-label hr { flex: 1; border: none; border-top: 1.5px dashed var(--border); }
+
+  /* USAGE NOTES */
+  .usage-block {
+    background: var(--pale);
+    border-left: 4px solid var(--accent);
+    border-radius: 0 10px 10px 0;
+    padding: 14px 16px;
+    margin-bottom: 20px;
+  }
+  .usage-block h3 { font-size: 0.95rem; font-weight: 600; margin-bottom: 6px; color: var(--accent2); }
+  .usage-block p { font-size: 0.86rem; color: var(--ink); line-height: 1.6; }
+
+  /* QUIZ */
+  .quiz-item {
+    background: var(--card);
+    border: 1.5px solid var(--border);
+    border-radius: 14px;
+    padding: 20px 20px 16px;
+    margin-bottom: 18px;
+  }
+  .quiz-q { font-size: 0.9rem; font-weight: 600; margin-bottom: 14px; line-height: 1.55; color: var(--ink); }
+  .quiz-q em { font-style: normal; color: var(--accent2); font-family: 'DM Serif Display', serif; }
+  .quiz-options { display: flex; flex-direction: column; gap: 8px; }
+  .opt-btn {
+    background: var(--pale);
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 14px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.86rem;
+    color: var(--ink);
+    cursor: pointer;
+    text-align: left;
+    transition: all 0.14s;
+  }
+  .opt-btn:hover:not(:disabled) { border-color: var(--accent); background: rgba(224,122,95,0.06); }
+  .opt-btn.correct { background: rgba(129,178,154,0.18); border-color: var(--correct); color: var(--ink); }
+  .opt-btn.wrong { background: rgba(224,122,95,0.15); border-color: var(--wrong); color: var(--ink); }
+  .quiz-feedback { font-size: 0.82rem; margin-top: 10px; padding: 8px 12px; border-radius: 8px; display: none; }
+  .quiz-feedback.show { display: block; }
+  .quiz-feedback.ok { background: rgba(129,178,154,0.15); color: #2d6a4f; }
+  .quiz-feedback.bad { background: rgba(224,122,95,0.12); color: #7a3124; }
+
+  .quiz-score {
+    text-align: center;
+    padding: 24px;
+    background: var(--card);
+    border-radius: 14px;
+    border: 1.5px solid var(--teal);
+    margin-top: 8px;
+    display: none;
+  }
+  .quiz-score.show { display: block; }
+  .score-num {
+    font-family: 'DM Serif Display', serif;
+    font-size: 3rem;
+    color: var(--accent);
+  }
+  .score-label { font-size: 0.85rem; color: var(--muted); margin-top: 4px; }
+
+  .btn-primary {
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    padding: 11px 28px;
+    border-radius: 25px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: opacity 0.15s;
+    margin-top: 16px;
+  }
+  .btn-primary:hover { opacity: 0.88; }
+
+  /* EXPRESSION TABLE */
+  .expr-table { width: 100%; border-collapse: collapse; margin-bottom: 28px; }
+  .expr-table th {
+    background: var(--accent2);
+    color: #fff;
+    font-size: 11px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    font-weight: 600;
+    padding: 10px 14px;
+    text-align: left;
+  }
+  .expr-table th:first-child { border-radius: 10px 0 0 0; }
+  .expr-table th:last-child { border-radius: 0 10px 0 0; }
+  .expr-table td {
+    font-size: 0.87rem;
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+  }
+  .expr-table tr:last-child td { border-bottom: none; }
+  .expr-table tr:nth-child(even) td { background: var(--pale); }
+  .expr-table .word { font-weight: 700; color: var(--accent); font-family: 'DM Serif Display', serif; font-size: 1rem; }
+  .expr-table .register { font-size: 10px; color: var(--muted); font-weight: 600; letter-spacing: 1px; }
+
+  /* PRACTICE PROMPT */
+  .practice-card {
+    background: var(--accent2);
+    color: #fff;
+    border-radius: 14px;
+    padding: 22px 22px 18px;
+    margin-bottom: 16px;
+  }
+  .practice-card h3 { font-family: 'DM Serif Display', serif; font-size: 1.1rem; margin-bottom: 8px; }
+  .practice-card p { font-size: 0.86rem; color: rgba(255,255,255,0.8); line-height: 1.6; }
+  .practice-card .task { margin-top: 10px; font-size: 0.82rem; background: rgba(255,255,255,0.1); padding: 8px 12px; border-radius: 8px; color: rgba(255,255,255,0.95); }
+
+  /* FILL-IN */
+  .fill-input {
+    border: 1.5px solid var(--border);
+    background: var(--pale);
+    border-radius: 6px;
+    padding: 4px 8px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.88rem;
+    color: var(--ink);
+    min-width: 100px;
+    outline: none;
+    transition: border-color 0.14s;
+  }
+  .fill-input:focus { border-color: var(--accent); background: #fff; }
+  .fill-input.correct-fill { border-color: var(--correct); background: rgba(129,178,154,0.1); }
+  .fill-input.wrong-fill { border-color: var(--wrong); background: rgba(224,122,95,0.08); }
+
+  .check-btn {
+    background: var(--accent2);
+    color: #fff;
+    border: none;
+    padding: 8px 20px;
+    border-radius: 20px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.84rem;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 12px;
+    transition: opacity 0.15s;
+  }
+  .check-btn:hover { opacity: 0.85; }
+
+  footer {
+    text-align: center;
+    padding: 28px;
+    font-size: 0.78rem;
+    color: var(--muted);
+    border-top: 1px solid var(--border);
+    margin-top: 20px;
+  }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-eyebrow">Indonesian Language · Unit 3</div>
+  <h1>Ngomong Gaul:<br><span>Everyday Slang & Expressions</span></h1>
+  <p>Learn how Indonesian people really talk — in chats, cafes, and daily life.</p>
+  <div class="level-badge">Low Intermediate · A2–B1</div>
+</div>
+
+<nav class="nav-tabs">
+  <button class="tab-btn active" onclick="showTab('vocab')">📚 Vocabulary</button>
+  <button class="tab-btn" onclick="showTab('expressions')">💬 Expressions</button>
+  <button class="tab-btn" onclick="showTab('dialogues')">🗣 Dialogues</button>
+  <button class="tab-btn" onclick="window.open('https://wayground.com/join','_blank')">✏️ Quiz</button>
+  <button class="tab-btn" onclick="window.open('https://docs.google.com/forms/d/e/1FAIpQLSfSP2uqC9D-M_9UxHhBl3Ei5mRGTv4FDdQf2bLb1c6iSbCknw/viewform','_blank')">🎯 Practice</button>
+</nav>
+
+<!-- ========== VOCAB ========== -->
+<section id="vocab" class="section active">
+  <h2 class="section-title">Core Vocabulary</h2>
+  <p class="section-sub">Tap a card to see an example. These words come up every day in Indonesian conversations.</p>
+
+  <div class="cat-label"><span>Pronouns & Basic Slang</span><hr></div>
+  <div class="vocab-grid">
+    <div class="vocab-card" onclick="flip(this)">
+      <div class="flip-hint">tap ▾</div>
+      <div class="vocab-tag">Pronoun</div>
+      <div class="vocab-word">Gue</div>
+      <div class="vocab-meaning">I / Me (informal)</div>
+      <div class="vocab-note">Replaces "aku" in casual speech. Very common in Jakarta & online. <br>e.g. <em>Gue mau pergi.</em> = I want to go.</div>
+    </div>
+    <div class="vocab-card" onclick="flip(this)">
+      <div class="flip-hint">tap ▾</div>
+      <div class="vocab-tag">Pronoun</div>
+      <div class="vocab-word">Lo / Loe</div>
+      <div class="vocab-meaning">You (informal)</div>
+      <div class="vocab-note">Replaces "kamu." Pair with <em>gue</em>.<br>e.g. <em>Lo mau ikut?</em> = Do you want to come?</div>
+    </div>
+    <div class="vocab-card" onclick="flip(this)">
+      <div class="flip-hint">tap ▾</div>
+      <div class="vocab-tag">Abbreviation</div>
+      <div class="vocab-word">MaGer</div>
+      <div class="vocab-meaning">Too lazy to move</div>
+      <div class="vocab-note">From <em>Malas Gerak.</em> Said when you don't want to go out.<br>e.g. <em>Mager pol hari ini.</em> = Super lazy today.</div>
+    </div>
+    <div class="vocab-card" onclick="flip(this)">
+      <div class="flip-hint">tap ▾</div>
+      <div class="vocab-tag">Adjective</div>
+      <div class="vocab-word">Galau</div>
+      <div class="vocab-meaning">Emotionally troubled</div>
+      <div class="vocab-note">Feeling sad or confused, usually about relationships.<br>e.g. <em>Lagi galau soal pacar.</em> = Troubled about my partner.</div>
+    </div>
+    <div class="vocab-card" onclick="flip(this)">
+      <div class="flip-hint">tap ▾</div>
+      <div class="vocab-tag">Noun (slang)</div>
+      <div class="vocab-word">Gebetan</div>
+      <div class="vocab-meaning">Crush (romantic interest)</div>
+      <div class="vocab-note">e.g. <em>Siapa gebetan kamu?</em> = Who's your crush?</div>
+    </div>
+    <div class="vocab-card" onclick="flip(this)">
+      <div class="flip-hint">tap ▾</div>
+      <div class="vocab-tag">Abbreviation</div>
+      <div class="vocab-word">BaPer</div>
+      <div class="vocab-meaning">Overly sensitive</div>
+      <div class="vocab-note">From <em>Bawa Perasaan.</em><br>e.g. <em>Jangan baper!</em> = Don't take it personally!</div>
+    </div>
+    <div class="vocab-card" onclick="flip(this)">
+      <div class="flip-hint">tap ▾</div>
+      <div class="vocab-tag">Abbreviation</div>
+      <div class="vocab-word">CaPer</div>
+      <div class="vocab-meaning">Attention seeker</div>
+      <div class="vocab-note">From <em>Cari Perhatian.</em><br>e.g. <em>Dia suka caper banget.</em> = He/she is such an attention seeker.</div>
+    </div>
+    <div class="vocab-card" onclick="flip(this)">
+      <div class="flip-hint">tap ▾</div>
+      <div class="vocab-tag">Adjective</div>
+      <div class="vocab-word">Kepo</div>
+      <div class="vocab-meaning">Nosy / overly curious</div>
+      <div class="vocab-note">e.g. <em>Jangan kepo!</em> = Mind your own business!</div>
+    </div>
+  </div>
+
+  <div class="cat-label"><span>Describing Situations</span><hr></div>
+  <div class="vocab-grid">
+    <div class="vocab-card" onclick="flip(this)">
+      <div class="flip-hint">tap ▾</div>
+      <div class="vocab-tag">Adjective</div>
+      <div class="vocab-word">Woles / Selow</div>
+      <div class="vocab-meaning">Chill / Relax</div>
+      <div class="vocab-note">e.g. <em>Woles aja!</em> = Just relax! Don't stress.</div>
+    </div>
+    <div class="vocab-card" onclick="flip(this)">
+      <div class="flip-hint">tap ▾</div>
+      <div class="vocab-tag">Adjective</div>
+      <div class="vocab-word">Modus</div>
+      <div class="vocab-meaning">Has a hidden motive</div>
+      <div class="vocab-note">e.g. <em>Dia pasti modus!</em> = He definitely has an ulterior motive!</div>
+    </div>
+    <div class="vocab-card" onclick="flip(this)">
+      <div class="flip-hint">tap ▾</div>
+      <div class="vocab-tag">Verb / Adv</div>
+      <div class="vocab-word">Iseng</div>
+      <div class="vocab-meaning">Just for fun / out of boredom</div>
+      <div class="vocab-note">Doing something without a serious reason.<br>e.g. <em>Iseng aja, aku ikut lomba.</em> = Just for fun, I joined the contest.</div>
+    </div>
+    <div class="vocab-card" onclick="flip(this)">
+      <div class="flip-hint">tap ▾</div>
+      <div class="vocab-tag">Exclamation</div>
+      <div class="vocab-word">Gokil</div>
+      <div class="vocab-meaning">Awesome / Crazy good</div>
+      <div class="vocab-note">e.g. <em>Gokil banget!</em> = That's insane/amazing!</div>
+    </div>
+    <div class="vocab-card" onclick="flip(this)">
+      <div class="flip-hint">tap ▾</div>
+      <div class="vocab-tag">Exclamation</div>
+      <div class="vocab-word">Gas / Gass</div>
+      <div class="vocab-meaning">Let's go! / Go for it!</div>
+      <div class="vocab-note">Used to express enthusiasm or agreement.<br>e.g. <em>Gasss!</em> = Let's go!!</div>
+    </div>
+    <div class="vocab-card" onclick="flip(this)">
+      <div class="flip-hint">tap ▾</div>
+      <div class="vocab-tag">Adjective</div>
+      <div class="vocab-word">Bete</div>
+      <div class="vocab-meaning">In a bad mood / grumpy</div>
+      <div class="vocab-note">e.g. <em>Aku lagi bete, males ngobrol.</em> = I'm in a bad mood, don't feel like talking.</div>
+    </div>
+    <div class="vocab-card" onclick="flip(this)">
+      <div class="flip-hint">tap ▾</div>
+      <div class="vocab-tag">Conjunction</div>
+      <div class="vocab-word">Gara-gara</div>
+      <div class="vocab-meaning">Because of / Due to</div>
+      <div class="vocab-note">e.g. <em>Gara-gara hujan, kita batal pergi.</em> = Because of the rain, we cancelled.</div>
+    </div>
+  </div>
+
+  <div class="usage-block">
+    <h3>💡 Key tip: <em>Banget</em></h3>
+    <p>Add <strong>banget</strong> after almost any adjective to intensify it — like "really" or "so" in English. <em>Seru banget!</em> (So fun!), <em>Capek banget</em> (Really tired), <em>Keren banget!</em> (So cool!)</p>
+  </div>
+</section>
+
+<!-- ========== EXPRESSIONS ========== -->
+<section id="expressions" class="section">
+  <h2 class="section-title">Useful Expressions</h2>
+  <p class="section-sub">Organized by emotion and situation — learn the right phrase at the right moment.</p>
+
+  <div class="cat-label"><span>Excitement & Enthusiasm</span><hr></div>
+  <table class="expr-table">
+    <thead>
+      <tr><th>Expression</th><th>Meaning</th><th>Use it when...</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><span class="word">Asik!</span></td><td>Hooray! / Awesome!</td><td>Something fun or good happens</td></tr>
+      <tr><td><span class="word">Seru banget!</span></td><td>So fun! / So exciting!</td><td>Reacting to a fun activity or story</td></tr>
+      <tr><td><span class="word">Keren!</span></td><td>Cool!</td><td>Complimenting something impressive</td></tr>
+      <tr><td><span class="word">Mantap!</span></td><td>Solid! / Great!</td><td>Expressing satisfaction</td></tr>
+      <tr><td><span class="word">Nggak sabar!</span></td><td>Can't wait!</td><td>Looking forward to something</td></tr>
+      <tr><td><span class="word">Syukurlah!</span></td><td>Thank goodness!</td><td>Relief when something goes right</td></tr>
+    </tbody>
+  </table>
+
+  <div class="cat-label"><span>Surprise, Disbelief & Doubt</span><hr></div>
+  <table class="expr-table">
+    <thead>
+      <tr><th>Expression</th><th>Meaning</th><th>Use it when...</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><span class="word">Sumpah?!</span></td><td>Seriously?! / No way!</td><td>Shocked by surprising news</td></tr>
+      <tr><td><span class="word">Serius?!</span></td><td>Seriously? / For real?</td><td>Asking if something is true</td></tr>
+      <tr><td><span class="word">Beneran?</span></td><td>Really? / For real?</td><td>Confirming whether something happened</td></tr>
+      <tr><td><span class="word">Masa?</span></td><td>Really? / Is that so?</td><td>Expressing doubt politely</td></tr>
+      <tr><td><span class="word">Oh ya?</span></td><td>Oh really?</td><td>Mild surprise in a story</td></tr>
+      <tr><td><span class="word">Nggak nyangka!</span></td><td>Didn't expect that!</td><td>Something unexpected happened</td></tr>
+    </tbody>
+  </table>
+
+  <div class="cat-label"><span>Sadness & Disappointment</span><hr></div>
+  <table class="expr-table">
+    <thead>
+      <tr><th>Expression</th><th>Meaning</th><th>Use it when...</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><span class="word">Kasihan...</span></td><td>Poor thing / How sad</td><td>Feeling sorry for someone</td></tr>
+      <tr><td><span class="word">Kecewa banget!</span></td><td>So disappointed!</td><td>Something let you down</td></tr>
+      <tr><td><span class="word">Ya ampun / Astaga</span></td><td>Oh my goodness!</td><td>Shocked + sad reaction</td></tr>
+      <tr><td><span class="word">Kok gitu sih?</span></td><td>How could that be? / Why like that?</td><td>Frustrated reaction to bad behavior</td></tr>
+      <tr><td><span class="word">Nggak banget!</span></td><td>Absolutely not / No way</td><td>Strongly rejecting or disliking something</td></tr>
+    </tbody>
+  </table>
+
+  <div class="cat-label"><span>No Energy / Lazy Mode</span><hr></div>
+  <table class="expr-table">
+    <thead>
+      <tr><th>Expression</th><th>Meaning</th><th>Use it when...</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><span class="word">Mager pol</span></td><td>Extremely lazy</td><td>Can't be bothered to move</td></tr>
+      <tr><td><span class="word">Nggak mood</span></td><td>Not in the mood</td><td>Just don't feel like doing anything</td></tr>
+      <tr><td><span class="word">Pengen rebahan</span></td><td>Want to just lie down</td><td>Tired and want to rest</td></tr>
+      <tr><td><span class="word">Nanti aja lah</span></td><td>Later lah / Maybe later</td><td>Postponing something lazily</td></tr>
+      <tr><td><span class="word">Males ah</span></td><td>Can't be bothered</td><td>Refusing gently due to laziness</td></tr>
+    </tbody>
+  </table>
+
+  <div class="cat-label"><span>Discourse Markers</span><hr></div>
+  <div class="usage-block">
+    <h3>Jadi — 3 different uses!</h3>
+    <p><strong>(1) So / Therefore:</strong> <em>Hujan, jadi kita batal pergi.</em> (It rained, so we cancelled.)<br>
+    <strong>(2) Did it happen? (confirmation):</strong> <em>Kamu jadi beli HP baru?</em> (Did you end up buying a phone?)<br>
+    <strong>(3) Still happening? (checking plans):</strong> <em>Kita jadi nonton?</em> (Are we still watching?)</p>
+  </div>
+  <div class="usage-block">
+    <h3>Ngomong-ngomong — "By the way..."</h3>
+    <p>Use at the start of a sentence to change topic or bring up something new, just like "BTW" in English.<br>
+    <em>Ngomong-ngomong, gimana kabar orangtua kamu?</em> = By the way, how are your parents?</p>
+  </div>
+  <div class="usage-block">
+    <h3>Mungkin — "Maybe" AND "Possible"</h3>
+    <p><strong>Maybe:</strong> <em>Mungkin dia lupa.</em> = Maybe she forgot.<br>
+    <strong>Possible:</strong> <em>Apa itu mungkin?</em> = Is that possible?<br>
+    <strong>Impossible:</strong> <em>Nggak mungkin!</em> = Impossible! / No way!</p>
+  </div>
+</section>
+
+<!-- ========== DIALOGUES ========== -->
+<section id="dialogues" class="section">
+  <h2 class="section-title">Real Conversations</h2>
+  <p class="section-sub">Read these dialogues and notice how slang and expressions fit naturally into everyday chat.</p>
+
+  <div class="dialogue-box">
+    <div class="dialogue-header">📱 Making Plans · Using "jadi" + excitement words</div>
+    <div class="dialogue-body">
+      <div class="line"><span class="speaker">A</span><span class="line-text">Eh, kamu <span class="highlight">jadi</span> ke konser bulan depan nggak?<span class="trans">Hey, are you still going to the concert next month?</span></span></div>
+      <div class="line"><span class="speaker b">B</span><span class="line-text">Jadi dong! Aku udah nggak sabar banget. Kamu?<span class="trans">Of course! I really can't wait. You?</span></span></div>
+      <div class="line"><span class="speaker">A</span><span class="line-text"><span class="highlight">Jadi</span>! Tapi temenku kayaknya nggak jadi ikut. <span class="highlight">Kasihan</span> banget.<span class="trans">Yes! But my friend might not come anymore. Such a shame.</span></span></div>
+      <div class="line"><span class="speaker b">B</span><span class="line-text"><span class="highlight">Masa</span>? Kenapa?<span class="trans">Really? Why?</span></span></div>
+      <div class="line"><span class="speaker">A</span><span class="line-text">Gara-gara ada kerjaan mendadak. Duh, <span class="highlight">nggak banget</span>.<span class="trans">Because of sudden work. Ugh, that sucks.</span></span></div>
+      <div class="line"><span class="speaker b">B</span><span class="line-text">Yauda, kita pergi berdua aja. <span class="highlight">Gas</span>!<span class="trans">Nevermind, let's just go the two of us. Let's go!</span></span></div>
+    </div>
+  </div>
+
+  <div class="dialogue-box">
+    <div class="dialogue-header">☕ Lazy Sunday · Mager expressions</div>
+    <div class="dialogue-body">
+      <div class="line"><span class="speaker">A</span><span class="line-text">Ngopi yuk! Ada cafe baru yang <span class="highlight">seru</span> banget.<span class="trans">Let's grab coffee! There's a new cafe that looks so fun.</span></span></div>
+      <div class="line"><span class="speaker b">B</span><span class="line-text">Duh, <span class="highlight">mager pol</span>. Jauh nggak?<span class="trans">Ugh, I'm so lazy. Is it far?</span></span></div>
+      <div class="line"><span class="speaker">A</span><span class="line-text">Lewat tol sekitar 20 menit aja.<span class="trans">Via the toll road, around 20 minutes.</span></span></div>
+      <div class="line"><span class="speaker b">B</span><span class="line-text"><span class="highlight">Males ah</span>. Lagi <span class="highlight">nggak mood</span>. <span class="highlight">Pengen rebahan</span> aja hari ini.<span class="trans">Can't be bothered. Not in the mood. Just want to lie down today.</span></span></div>
+      <div class="line"><span class="speaker">A</span><span class="line-text">Dih, <span class="highlight">nggak asik</span>! Ntar sore gimana?<span class="trans">Ugh, no fun! What about this afternoon?</span></span></div>
+      <div class="line"><span class="speaker b">B</span><span class="line-text"><span class="highlight">Nanti aja lah</span>. Aku kabarin kamu.<span class="trans">Maybe later. I'll let you know.</span></span></div>
+    </div>
+  </div>
+
+  <div class="dialogue-box">
+    <div class="dialogue-header">😲 Surprising News · Disbelief expressions</div>
+    <div class="dialogue-body">
+      <div class="line"><span class="speaker">A</span><span class="line-text">Eh, tau nggak? Aku dapet tiket gratis konser ke luar negeri!<span class="trans">Hey, you know what? I got a free ticket to an overseas concert!</span></span></div>
+      <div class="line"><span class="speaker b">B</span><span class="line-text"><span class="highlight">Sumpah?!</span> Ke mana?<span class="trans">No way?! Where to?</span></span></div>
+      <div class="line"><span class="speaker">A</span><span class="line-text">Ke Jepang! Aku iseng ikut lotere, eh menang.<span class="trans">To Japan! I entered the lottery just for fun, and I won.</span></span></div>
+      <div class="line"><span class="speaker b">B</span><span class="line-text"><span class="highlight">Serius?!</span> <span class="highlight">Gokil banget!</span> Kapan?<span class="trans">Seriously?! That's insane! When?</span></span></div>
+      <div class="line"><span class="speaker">A</span><span class="line-text">Bulan depan. <span class="highlight">Nggak sabar</span> banget!<span class="trans">Next month. I can't wait at all!</span></span></div>
+      <div class="line"><span class="speaker b">B</span><span class="line-text"><span class="highlight">Keren banget</span>! <span class="highlight">Syukurlah</span>! Kamu emang beruntung.<span class="trans">So cool! Thank goodness! You're really lucky.</span></span></div>
+    </div>
+  </div>
+
+  <div class="dialogue-box">
+    <div class="dialogue-header">😔 Disappointment · Sad expressions</div>
+    <div class="dialogue-body">
+      <div class="line"><span class="speaker">A</span><span class="line-text">Marshel tadi tiba-tiba batalin janji makan bareng. Padahal aku udah siap-siap.<span class="trans">Marshel suddenly cancelled our lunch plan. I'd already gotten ready.</span></span></div>
+      <div class="line"><span class="speaker b">B</span><span class="line-text"><span class="highlight">Kok gitu sih?</span> Dia bilang kenapa?<span class="trans">How could he do that? Did he say why?</span></span></div>
+      <div class="line"><span class="speaker">A</span><span class="line-text">Katanya ada urusan penting. Tapi ternyata dia cuma ngopi sama temen.<span class="trans">He said it was something important. But turns out he was just having coffee with friends.</span></span></div>
+      <div class="line"><span class="speaker b">B</span><span class="line-text"><span class="highlight">Nggak banget</span>! <span class="highlight">Kecewa banget</span> pasti.<span class="trans">That's awful! You must be so disappointed.</span></span></div>
+      <div class="line"><span class="speaker">A</span><span class="line-text">Iya. <span class="highlight">Ngga nyangka</span> dia bisa gitu.<span class="trans">Yeah. I didn't expect him to do that.</span></span></div>
+    </div>
+  </div>
+</section>
+
+
+
+<footer>Indonesian Language Material · Low Intermediate (A2–B1) · Based on authentic everyday speech</footer>
+
+<script>
+// Tab switching
+function showTab(id) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  event.target.classList.add('active');
+  window.scrollTo({top: 0, behavior: 'smooth'});
+}
+
+// Vocab flip
+function flip(card) {
+  card.classList.toggle('flipped');
+}
+
+
+</script>
+</body>
+</html>
