@@ -1,17 +1,65 @@
+<div class="unit-container">
+  <a href="https://learnengdo.com/Unit_1" class="unit-box unit-1">
+    <span class="unit-label">Unit 1</span>
+  </a>
+  <a href="https://learnengdo.com/Unit_2" class="unit-box unit-2">
+    <span class="unit-label">Unit 2</span>
+  </a>
+  <a href="https://learnengdo.com/Unit_3" class="unit-box unit-3">
+    <span class="unit-label">Unit 3</span>
+  </a>
+  <a href="https://learnengdo.com/Unit_4" class="unit-box unit-4">
+    <span class="unit-label">Unit 4</span>
+  </a>
+</div>
+
 <style>
+.unit-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  justify-content: center;
+  padding: 20px;
+}
 
-  button
-  { background-color: #8f49ff; 
-    color: white ;
-    border-radius: 6px; 
-    height: 36px;
-    width: 105px; 
-    border: 3px solid #63faff;
-    cursor: pointer;}
+.unit-box {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 140px;
+  height: 100px;
+  border-radius: 16px;
+  text-decoration: none;
+  font-family: 'Trebuchet MS', sans-serif;
+  font-weight: bold;
+  font-size: 18px;
+  color: #1B3A4B;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
 
+.unit-box:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 6px 14px rgba(0,0,0,0.15);
+}
+
+.unit-1 {
+  background-color: #FFD966;
+  border: 3px solid #E0B94D;
+}
+
+.unit-2 {
+  background-color: #A8D8D0;
+  border: 3px solid #7CB8AE;
+}
+
+.unit-3 {
+  background-color: #F4C2C2;
+  border: 3px solid #E098A0;
+}
+
+.unit-4 {
+  background-color: #B8D4E8;
+  border: 3px solid #8FB4D4;
+}
 </style>
-
-<a href="https://learnengdo.com/Unit_1"> <button type="button">Unit 1 </button></a>
-<a href="https://learnengdo.com/Unit_2"> <button type="button">Unit 2 </button></a>
-<a href="https://learnengdo.com/Unit_3"> <button type="button">Unit 3 </button></a>
-<a href="https://learnengdo.com/Unit_4"> <button type="button">Unit 4 </button></a>
