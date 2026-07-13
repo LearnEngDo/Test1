@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>One Day Trip ke Bali 🌴</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    font-family: 'Comic Sans MS', 'Segoe UI', sans-serif;
+    background: linear-gradient(135deg,#ffe8f0 0%,#e8f4ff 50%,#fff5e0 100%);
+    color:#3a3a5c; padding:20px; line-height:1.7;
+  }
+  .wrap { max-width:960px; margin:0 auto; }
+  h1 { text-align:center; font-size:2.4rem; margin:10px 0 4px; color:#ff5c8a; text-shadow:2px 2px 0 #fff; }
+  .sub { text-align:center; color:#7a6f9b; margin-bottom:24px; font-size:1.05rem;}
+  .card {
+    background:#fff; border-radius:22px; padding:24px 26px; margin-bottom:22px;
+    box-shadow:0 8px 24px rgba(180,140,200,.18); border:3px solid #ffe0ec;
+  }
+  .card h2 { font-size:1.5rem; margin-bottom:6px; display:flex; align-items:center; gap:10px; flex-wrap:wrap;}
+  .badge { background:#ffd84d; color:#7a5b00; font-size:.8rem; padding:3px 12px; border-radius:20px; font-weight:bold;}
+  .c1{border-color:#ffd1dc;} .c2{border-color:#c9e8ff;} .c3{border-color:#d5f5d0;} .c4{border-color:#ffe6b3;} .c5{border-color:#e3d1ff;}
+  .hint{ font-size:.85rem; color:#aa9; margin-bottom:8px;}
+
+  /* VOCAB CHECK */
+  .check-grid{ display:grid; grid-template-columns:repeat(auto-fill,minmax(140px,1fr)); gap:8px; margin-top:14px;}
+  .cchip{ background:#fff0f7; border:2px solid #ffd1dc; border-radius:12px; padding:9px 10px; cursor:pointer; text-align:center; transition:.2s;}
+  .cchip:hover{ transform:translateY(-2px);}
+  .cchip .cid{ font-weight:bold; color:#c23b6a; display:block;}
+  .cchip .cen{ font-size:.78rem; color:#3a7abd; display:none;}
+  .cchip.show .cen{ display:block;}
+  .cchip.familiar{ background:#8fe388; border-color:#4caf50;}
+  .cchip.familiar .cid{ color:#0d4d0a;}
+
+  /* FILL IN BLANK */
+  .story-fill{ font-size:1.02rem; }
+  .story-fill p{ margin-bottom:12px;}
+  .blank{ display:inline-flex; align-items:center; gap:4px;}
+  .blank select{ font-family:inherit; font-size:.9rem; padding:3px 6px; border-radius:8px;
+    border:2px solid #b9a7e0; background:#f6f2ff; color:#4a3a7a; cursor:pointer;}
+  .blank select.correct{ background:#c8f5c0; border-color:#4caf50; color:#0d4d0a;}
+  .blank select.incorrect{ background:#ffd6d6; border-color:#e05353;}
+  .num{ font-weight:bold; color:#ff5c8a; font-size:.85rem;}
+  .checkbtn{ background:#7c5cff; color:#fff; border:0; padding:11px 26px; border-radius:22px; font-weight:bold; cursor:pointer; font-size:1rem; margin-top:14px;}
+  .checkbtn:hover{ background:#6544e0;}
+  #fillScore{ margin-top:12px; font-weight:bold; font-size:1.05rem; text-align:center; min-height:26px;}
+
+  /* FLIP GAME */
+  .game-grid { display:grid; grid-template-columns:repeat(4,minmax(0,110px)); gap:10px; margin-top:16px;
+    justify-content:center;}
+  @media(max-width:640px){ .game-grid{grid-template-columns:repeat(3,minmax(0,90px)); gap:8px;} }
+  .tile { aspect-ratio:1/1; perspective:600px; cursor:pointer;}
+  .tile-inner{ position:relative; width:100%; height:100%; transition:transform .5s; transform-style:preserve-3d;}
+  .tile.flipped .tile-inner{ transform:rotateY(180deg);}
+  .tile-face{ position:absolute; width:100%; height:100%; backface-visibility:hidden;
+    border-radius:12px; display:flex; align-items:center; justify-content:center; text-align:center;
+    font-weight:bold; padding:5px; font-size:.72rem;}
+  .tile-front{ background:linear-gradient(145deg,#7c5cff,#a17bff); color:#fff; font-size:1.6rem;
+    box-shadow:0 4px 10px rgba(120,80,255,.3);}
+  .tile-back{ background:#fff; color:#3a3a5c; border:2px solid #7c5cff; transform:rotateY(180deg);}
+  .tile.matched .tile-back{ background:#8fe388; color:#155a10; border-color:#4caf50;}
+  .tile.wrong .tile-back{ background:#ff7676; color:#fff; border-color:#e05353;}
+  .game-status{ text-align:center; margin-top:16px; font-size:1.02rem; min-height:26px; font-weight:bold;}
+  .ask-box{ background:#fff3cd; border:2px dashed #e0a800; border-radius:14px; padding:12px 16px; margin-top:12px; display:none;}
+  .ask-box.show{ display:block;}
+  .btn{ background:#ff5c8a; color:#fff; border:0; padding:10px 22px; border-radius:20px; font-weight:bold; cursor:pointer; font-size:.95rem; margin-top:12px;}
+  .btn:hover{ background:#e6447a;}
+
+  /* MAP */
+  #map-box { border-radius:18px; overflow:hidden; border:4px solid #ffd84d;}
+  iframe { width:100%; height:340px; border:0; display:block;}
+
+  /* STORY VOCAB TRACKER */
+  .vocab-grid{ display:grid; grid-template-columns:repeat(auto-fill,minmax(150px,1fr)); gap:10px; margin-top:14px;}
+  .vchip{ background:#eef4ff; border:2px solid #cdddf5; border-radius:12px; padding:10px 12px; cursor:pointer; transition:.2s; text-align:center;}
+  .vchip:hover{ transform:translateY(-2px);}
+  .vchip .vid{ font-weight:bold; color:#2f5c9e;}
+  .vchip .ven{ font-size:.8rem; color:#888; display:none; margin-top:3px;}
+  .vchip.reveal .ven{ display:block;}
+  .vchip.used{ background:#8fe388; border-color:#4caf50;}
+  .vchip.used .vid, .vchip.used .ven{ color:#0d4d0a;}
+  .counter{ text-align:center; margin-top:12px; font-weight:bold; color:#7a6f9b;}
+  .steps li { margin:10px 0; list-style:none; background:#fff7fb; padding:12px 16px; border-radius:14px; border-left:6px solid #ff9ec4; cursor:pointer; transition:.2s;}
+  .steps li:hover{ transform:translateX(6px); background:#fff0f7;}
+  .id-text{ font-weight:bold; font-size:1.05rem; color:#c23b6a;}
+  .en-text{ display:none; color:#3a7abd; font-style:italic; margin-top:4px;}
+  .steps li.open .en-text{ display:block;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>🌴 Ayo Ikut Aku Jalan-Jalan! ✨</h1>
+  <p class="sub">Ceritakan perjalananmu — <em>(Tell your trip story!)</em></p>
+
+  <!-- SECTION 1: VOCAB CHECK -->
+  <div class="card c1">
+    <h2>✅ Cek Kosakata <span class="badge">Familiar semua?</span></h2>
+    <p class="hint">Klik kartu untuk lihat arti. Sudah tahu artinya? Klik lagi → hijau (Click to see meaning; click again if you know it → green)</p>
+    <div class="check-grid" id="checkGrid"></div>
+    <div class="counter" id="checkCounter"></div>
+  </div>
+
+  <!-- SECTION 2: FILL IN THE BLANK STORY (Bali) -->
+  <div class="card c2">
+    <h2>📝 Lengkapi Cerita <span class="badge">Isi kata yang tepat</span></h2>
+    <p class="hint">Pilih kata yang benar untuk setiap nomor (Choose the correct word for each blank)</p>
+    <div class="story-fill" id="storyFill"></div>
+    <div style="text-align:center"><button class="checkbtn" onclick="checkFill()">🔍 Periksa Jawaban</button></div>
+    <div id="fillScore"></div>
+  </div>
+
+  <!-- SECTION 3: FLIP GAME -->
+  <div class="card c3">
+    <h2>🎮 Game Flip: Cocokkan Kosakata! <span class="badge">Balik kartunya</span></h2>
+    <p class="hint">Balik dua kartu (efek flip 3D!) dan temukan pasangan Indonesia–Inggris. <strong>Salah?</strong> Tanya gurumu pakai kata itu. <strong>Benar?</strong> Skip! 🎉</p>
+    <div class="game-grid" id="gameGrid"></div>
+    <div class="game-status" id="gameStatus"></div>
+    <div class="ask-box" id="askBox">🙋 <strong>Belum cocok!</strong> Buat pertanyaan ke gurumu memakai kata: <span id="askWord" style="color:#c23b6a"></span></div>
+    <div style="text-align:center"><button class="btn" onclick="resetGame()">🔄 Ulangi Game</button></div>
+  </div>
+
+  <!-- SECTION 4: PANDUAN BERCERITA (above map) -->
+  <div class="card c4">
+    <h2>📋 Panduan Bercerita <span class="badge">Klik untuk artinya</span></h2>
+    <p class="hint">Ikuti langkah ini saat bercerita (Follow these steps when telling your story)</p>
+    <ul class="steps" id="steps">
+      <li><span class="id-text">1. Perkenalkan dirimu 👋</span><div class="en-text">Introduce yourself (name, where you're from)</div></li>
+      <li><span class="id-text">2. Kamu pergi ke mana? 🗺️</span><div class="en-text">Where did you go?</div></li>
+      <li><span class="id-text">3. Kamu pergi dengan siapa? 👨‍👩‍👧</span><div class="en-text">Who did you go with?</div></li>
+      <li><span class="id-text">4. Naik apa ke sana? 🚗</span><div class="en-text">What transportation did you take?</div></li>
+      <li><span class="id-text">5. Kamu ngapain aja di sana? 🎡</span><div class="en-text">What did you do there?</div></li>
+      <li><span class="id-text">6. Berapa biayanya? 💰</span><div class="en-text">How much did it cost?</div></li>
+      <li><span class="id-text">7. Bagaimana perasaanmu? 😊</span><div class="en-text">How did you feel about the trip?</div></li>
+    </ul>
+  </div>
+
+  <!-- SECTION 5: MAP (below panduan) -->
+  <div class="card c5">
+    <h2>🗺️ Peta: Ballarat, Australia</h2>
+    <p class="hint">Gunakan peta ini saat bercerita ke mana kamu pergi, lalu lihat kosakata di bawah (Use the map to tell where you went, then use the vocab below)</p>
+    <div id="map-box">
+      <iframe loading="lazy" title="Peta Ballarat"
+        src="https://www.openstreetmap.org/export/embed.html?bbox=143.60%2C-37.62%2C143.98%2C-37.48&layer=mapnik&marker=-37.5622%2C143.8503">
+        Peta tidak dapat dimuat.
+      </iframe>
+    </div>
+    <p class="hint" style="text-align:center; margin-top:8px;">📍 Ballarat, Victoria &nbsp;·&nbsp; <a href="https://www.openstreetmap.org/?mlat=-37.5622&mlon=143.8503#map=12/-37.5622/143.8503" target="_blank" style="color:#7c5cff;">Buka peta besar di tab baru</a></p>
+  </div>
+
+  <!-- SECTION 6: STORY VOCAB TRACKER -->
+  <div class="card c4">
+    <h2>📚 Kosakata Cerita <span class="badge">Klik = lihat arti · Guru: klik saat dipakai</span></h2>
+    <p class="hint">Klik kartu untuk lihat artinya (click to reveal). Saat murid memakai kata dalam cerita, klik lagi → hijau ✅</p>
+    <div class="vocab-grid" id="vocabGrid"></div>
+    <div class="counter" id="vocabCounter"></div>
+  </div>
+</div>
+
+<script>
+const VOCAB = [
+  ["Menginap","To stay the night"],["Lalu","And then"],["Lihat","To see"],
+  ["Sewa","To rent"],["Habiskan","To spend (time)"],["Santai","To chill"],
+  ["Naik","To take a transportation"],["Pulang","To go back"],["Biaya","The cost"],
+  ["Bersepeda","To ride a bicycle"],["Coba","To try"],["Namanya","The name"],
+  ["Menikmati","To enjoy"],["Berfoto","To take a picture"],["Hari pertama","The first day"],
+  ["Tiket masuk","Entrance ticket"],["Mampir","To stop by"],["Berkeliling","To go around"],
+  ["Jalan-jalan","Walk around / Hangout"],["Tidak cukup","Not enough"],["Butuh","Need"],
+  ["Kasih","Give"],["Sediakan","Provide"],["Ganti","Change"],
+  ["Kira-kira","Approximately"],["Kapal","Ship"],["Akhir-akhir ini","Recently"]
+];
+
+/* ---------- SECTION 1: vocab check ---------- */
+const cg=document.getElementById('checkGrid');
+VOCAB.forEach(v=>{
+  const d=document.createElement('div');
+  d.className='cchip';
+  d.innerHTML=`<span class="cid">${v[0]}</span><span class="cen">${v[1]}</span>`;
+  let step=0;
+  d.onclick=()=>{
+    step++;
+    if(step===1){ d.classList.add('show'); }
+    else{ d.classList.toggle('familiar'); updateCheck(); }
+  };
+  cg.appendChild(d);
+});
+function updateCheck(){
+  const f=document.querySelectorAll('.cchip.familiar').length;
+  document.getElementById('checkCounter').textContent=`✅ Familiar: ${f} / ${VOCAB.length} kata`;
+}
+updateCheck();
+
+/* ---------- SECTION 2: fill in the blank (Bali) ---------- */
+/* answer key from uploaded exercise, story adapted to Bali (same structure & answers) */
+const ANSWERS = ["Naik","Menginap","Biaya","Hari pertama","Berkeliling","Lihat","Tiket masuk",
+  "Habiskan","Lalu","Namanya","Mampir","Coba","Santai","Jalan-jalan","Berfoto","Menikmati",
+  "Sewa","Bersepeda","Pulang"];
+
+const STORY = [
+  {t:"Akhir bulan Desember ini aku akan liburan ke Bali untuk 3 hari 2 malam. "},
+  {t:"Aku akan "},{b:1},{t:" pesawat bersama satu temanku. Kami akan "},{b:2},
+  {t:" di hotel dekat Pantai Kuta. Mungkin "},{b:3},
+  {t:" tiket pesawat kira-kira Rp 800.000. Lalu, biaya hotel per malam Rp 600.000."},
+  {p:true},
+  {b:4},{t:", kami akan pergi ke Tanah Lot dulu sebelum ke hotel. Kami akan "},{b:5},
+  {t:" di sana dan "},{b:6},{t:" pura yang indah di atas laut. "},{b:7},
+  {t:" per orang Rp 60.000. Kami akan "},{b:8},{t:" waktu di sana sampai sore. "},{b:9},
+  {t:", kami akan pergi ke hotel untuk istirahat."},
+  {p:true},
+  {t:"Hari kedua, kami akan pergi ke taman air, "},{b:10},
+  {t:" Waterbom Bali. Tiket masuknya sekitar Rp 500.000 per orang. Kami akan bermain sampai sore. Kami akan "},{b:11},
+  {t:" untuk makan ke Warung Made. Kami ingin "},{b:12},
+  {t:" ayam betutu yang terkenal. Lalu kami pulang ke hotel. Malam hari, kami pikir untuk "},{b:13},
+  {t:" di sekitar hotel dan lalu kami akan istirahat."},
+  {p:true},
+  {t:"Hari ketiga, kami akan "},{b:14},{t:" di hotel sebentar sebelum check out. Jam 12, kami ingin berkunjung ke Sawah Tegallalang. Di sana kami bisa "},{b:15},
+  {t:" dengan pemandangan hijau yang cantik. Kami sangat "},{b:16},
+  {t:" view di sana. Kami juga akan "},{b:17},{t:" motor dan "},{b:18},
+  {t:" di sekitar hotel. Kemudian, kami akan "},{b:19},{t:" ke rumah."}
+];
+
+function buildStory(){
+  const el=document.getElementById('storyFill');
+  let html='<p>';
+  STORY.forEach(part=>{
+    if(part.p){ html+='</p><p>'; return; }
+    if(part.t){ html+=part.t; return; }
+    if(part.b){
+      const n=part.b;
+      const opts=[...VOCAB.map(v=>v[0])].sort((a,b)=>a.localeCompare(b));
+      let sel=`<span class="blank"><span class="num">${n}.</span><select data-ans="${ANSWERS[n-1]}"><option value="">— pilih —</option>`;
+      opts.forEach(o=>{ sel+=`<option value="${o}">${o}</option>`; });
+      sel+='</select></span>';
+      html+=sel;
+    }
+  });
+  html+='</p>';
+  el.innerHTML=html;
+}
+buildStory();
+
+function checkFill(){
+  const sels=document.querySelectorAll('#storyFill select');
+  let correct=0;
+  sels.forEach(s=>{
+    s.classList.remove('correct','incorrect');
+    if(s.value===s.dataset.ans){ s.classList.add('correct'); correct++; }
+    else if(s.value!==''){ s.classList.add('incorrect'); }
+  });
+  const total=sels.length;
+  const sc=document.getElementById('fillScore');
+  sc.textContent=`Skor: ${correct} / ${total} benar` + (correct===total? ' 🏆 Sempurna!' : ' — coba perbaiki yang merah!');
+  sc.style.color = correct===total ? '#2e7d32' : '#c23b6a';
+}
+
+/* ---------- SECTION 3: flip game ---------- */
+let first=null, lock=false;
+const grid=document.getElementById('gameGrid');
+const gstatus=document.getElementById('gameStatus');
+const askBox=document.getElementById('askBox');
+const NUM_PAIRS=8; // more vocab than before
+
+function makeTile(key,txt){
+  const t=document.createElement('div');
+  t.className='tile'; t.dataset.key=key; t.dataset.txt=txt;
+  t.innerHTML=`<div class="tile-inner">
+    <div class="tile-face tile-front">?</div>
+    <div class="tile-face tile-back">${txt}</div></div>`;
+  t.onclick=()=>flip(t);
+  return t;
+}
+function resetGame(){
+  grid.innerHTML=''; gstatus.textContent=''; askBox.classList.remove('show');
+  first=null; lock=false;
+  const pool=[...VOCAB].sort(()=>Math.random()-.5).slice(0,NUM_PAIRS);
+  let cards=[];
+  pool.forEach((p,i)=>{ cards.push([i,p[0]]); cards.push([i,p[1]]); });
+  cards.sort(()=>Math.random()-.5);
+  cards.forEach(c=>grid.appendChild(makeTile(c[0],c[1])));
+  // preview
+  lock=true;
+  grid.querySelectorAll('.tile').forEach(t=>t.classList.add('flipped'));
+  gstatus.textContent='👀 Hafalkan dulu... (Memorize!)';
+  setTimeout(()=>{
+    grid.querySelectorAll('.tile').forEach(t=>t.classList.remove('flipped'));
+    gstatus.textContent='Balik dua kartu untuk mencocokkan! (Flip two cards!)';
+    lock=false;
+  },2800);
+}
+function flip(tile){
+  if(lock||tile.classList.contains('matched')||tile===first)return;
+  tile.classList.add('flipped');
+  if(!first){ first=tile; return; }
+  lock=true;
+  if(first.dataset.key===tile.dataset.key){
+    setTimeout(()=>{
+      first.classList.add('matched'); tile.classList.add('matched');
+      gstatus.textContent='🎉 Cocok! Kamu boleh skip pertanyaan ini! (Match! Skip.)';
+      askBox.classList.remove('show');
+      first=null; lock=false; checkWin();
+    },600);
+  } else {
+    tile.classList.add('wrong'); first.classList.add('wrong');
+    const w=VOCAB[first.dataset.key];
+    document.getElementById('askWord').textContent=w[0]+' ('+w[1]+')';
+    askBox.classList.add('show');
+    gstatus.textContent='❌ Belum cocok! Tanya gurumu pakai kata ini 👇 (Ask your teacher!)';
+    const a=first,b=tile;
+    setTimeout(()=>{
+      [a,b].forEach(x=>{ x.classList.remove('flipped','wrong'); });
+      first=null; lock=false;
+    },1800);
+  }
+}
+function checkWin(){
+  const total=grid.querySelectorAll('.tile').length;
+  const done=grid.querySelectorAll('.tile.matched').length;
+  if(done===total&&total>0){ gstatus.textContent='🏆 Hebat! Semua cocok! Sekarang ceritakan perjalananmu! 🌴'; }
+}
+resetGame();
+
+/* ---------- SECTION 5: story vocab tracker ---------- */
+const vg=document.getElementById('vocabGrid');
+VOCAB.forEach(v=>{
+  const d=document.createElement('div');
+  d.className='vchip';
+  d.innerHTML=`<span class="vid">${v[0]}</span><span class="ven">${v[1]}</span>`;
+  let step=0;
+  d.onclick=()=>{
+    step++;
+    if(step===1){ d.classList.add('reveal'); }
+    else{ d.classList.toggle('used'); updateCounter(); }
+  };
+  vg.appendChild(d);
+});
+function updateCounter(){
+  const used=document.querySelectorAll('.vchip.used').length;
+  document.getElementById('vocabCounter').textContent=`✅ Sudah dipakai: ${used} / ${VOCAB.length} kata`;
+}
+updateCounter();
+
+/* steps reveal */
+document.querySelectorAll('#steps li').forEach(li=>{ li.onclick=()=>li.classList.toggle('open'); });
+</script>
+</body>
+</html>
