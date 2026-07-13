@@ -1,65 +1,197 @@
-<div class="unit-container">
-  <a href="https://learnengdo.com/Unit_1" class="unit-box unit-1">
-    <span class="unit-label">Unit 1</span>
-  </a>
-  <a href="https://learnengdo.com/Unit_2" class="unit-box unit-2">
-    <span class="unit-label">Unit 2</span>
-  </a>
-  <a href="https://learnengdo.com/Unit_3" class="unit-box unit-3">
-    <span class="unit-label">Unit 3</span>
-  </a>
-  <a href="https://learnengdo.com/Unit_4" class="unit-box unit-4">
-    <span class="unit-label">Unit 4</span>
-  </a>
-</div>
-
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Learn Engdo - Home</title>
+<link href="https://fonts.googleapis.com/css2?family=Chewy&display=swap" rel="stylesheet">
 <style>
-.unit-container {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 16px;
-  justify-content: center;
-  padding: 20px;
-}
+  body {
+    margin: 0;
+    padding: 40px 20px;
+    background-color: #FFE4EC;
+    font-family: 'Trebuchet MS', sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
 
-.unit-box {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 140px;
-  height: 100px;
-  border-radius: 16px;
-  text-decoration: none;
-  font-family: 'Trebuchet MS', sans-serif;
-  font-weight: bold;
-  font-size: 18px;
-  color: #1B3A4B;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-  transition: transform 0.2s, box-shadow 0.2s;
-}
+  h1 {
+    font-family: 'Chewy', cursive;
+    font-size: 56px;
+    color: #FFFFFF;
+    -webkit-text-stroke: 2px #A8D8D0;
+    text-shadow: 3px 3px 0 #A8D8D0, 0 6px 12px rgba(0,0,0,0.15);
+    margin-bottom: 40px;
+    animation: melayang 3s ease-in-out infinite;
+  }
 
-.unit-box:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 6px 14px rgba(0,0,0,0.15);
-}
+  @keyframes melayang {
+    0% { transform: translateY(0px); }
+    50% { transform: translateY(-15px); }
+    100% { transform: translateY(0px); }
+  }
 
-.unit-1 {
-  background-color: #FFD966;
-  border: 3px solid #E0B94D;
-}
+  .warna-eng {
+    color: #FBE1E7;
+    -webkit-text-stroke: 2px #E8B8C5;
+  }
 
-.unit-2 {
-  background-color: #A8D8D0;
-  border: 3px solid #7CB8AE;
-}
+  .warna-do {
+    color: #E8DCF3;
+    -webkit-text-stroke: 2px #C9AEDD;
+  }
 
-.unit-3 {
-  background-color: #F4C2C2;
-  border: 3px solid #E098A0;
-}
+  @keyframes kilau {
+    0% { background-position: 200% 0; }
+    100% { background-position: -100% 0; }
+  }
 
-.unit-4 {
-  background-color: #B8D4E8;
-  border: 3px solid #8FB4D4;
-}
+  .button-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    justify-content: center;
+    max-width: 800px;
+    margin-bottom: 30px;
+  }
+
+  .unit-box {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 130px;
+    height: 90px;
+    border-radius: 16px;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 17px;
+    color: #1B3A4B;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    transition: transform 0.15s, box-shadow 0.15s;
+    cursor: pointer;
+    border: 3px solid;
+  }
+
+  .unit-box:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 6px 14px rgba(0,0,0,0.15);
+  }
+
+  .unit-box:active {
+    transform: translateY(-1px) scale(0.97);
+  }
+
+  .unit-1 { background-color: #FFD966; border-color: #E0B94D; }
+  .unit-2 { background-color: #A8D8D0; border-color: #7CB8AE; }
+  .unit-3 { background-color: #F4C2C2; border-color: #E098A0; }
+  .unit-4 { background-color: #B8D4E8; border-color: #8FB4D4; }
+  .unit-5 { background-color: #D4B8E8; border-color: #B48FD4; }
+  .unit-6 { background-color: #FFC299; border-color: #E0A070; }
+  .unit-7 { background-color: #C2E8B8; border-color: #96C989; }
+  .unit-8 { background-color: #B8E8DE; border-color: #8FCABE; }
+  .unit-9 { background-color: #F0D9B8; border-color: #D1B98C; }
+  .unit-10 { background-color: #E8B8C2; border-color: #C98F9C; }
+
+  .special-container {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .special-box {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 160px;
+    height: 90px;
+    border-radius: 16px;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 18px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    transition: transform 0.15s, box-shadow 0.15s;
+    cursor: pointer;
+    border: 3px solid;
+  }
+
+  .special-box:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 6px 14px rgba(0,0,0,0.15);
+  }
+
+  .special-box:active {
+    transform: translateY(-1px) scale(0.97);
+  }
+
+  .game-box { background-color: #FFF3A3; border-color: #E0D470; color: #1B3A4B; }
+  .ask-box { background-color: #C9F0FF; border-color: #8FCFE0; color: #1B3A4B; }
 </style>
+</head>
+<body>
+
+  <h1>Learn <span class="warna-eng">Eng</span><span class="warna-do">do</span></h1>
+
+  <div class="button-container">
+    <a href="https://learnengdo.com/Unit_1" class="unit-box unit-1 sound-click">Unit 1</a>
+    <a href="https://learnengdo.com/Unit_2" class="unit-box unit-2 sound-click">Unit 2</a>
+    <a href="https://learnengdo.com/Unit_3" class="unit-box unit-3 sound-click">Unit 3</a>
+    <a href="https://learnengdo.com/Unit_4" class="unit-box unit-4 sound-click">Unit 4</a>
+    <a href="https://learnengdo.com/Unit_5" class="unit-box unit-5 sound-click">Unit 5</a>
+    <a href="https://learnengdo.com/Unit_6" class="unit-box unit-6 sound-click">Unit 6</a>
+    <a href="https://learnengdo.com/Unit_7" class="unit-box unit-7 sound-click">Unit 7</a>
+    <a href="https://learnengdo.com/Unit_8" class="unit-box unit-8 sound-click">Unit 8</a>
+    <a href="https://learnengdo.com/Unit_9" class="unit-box unit-9 sound-click">Unit 9</a>
+    <a href="https://learnengdo.com/Unit_10" class="unit-box unit-10 sound-click">Unit 10</a>
+  </div>
+
+  <div class="special-container">
+    <a href="https://learnengdo.com/Game" class="special-box game-box sound-click">🎮 Game</a>
+    <a href="https://learnengdo.com/Ask_Me" class="special-box ask-box sound-click">💬 Ask Me</a>
+  </div>
+
+  <script>
+    function mainkanSuaraKlik() {
+      var AudioContext = window.AudioContext || window.webkitAudioContext;
+      var ctx = new AudioContext();
+
+      var pantulan = [
+        { mulai: 0, durasi: 0.14, frekAwal: 500, frekAkhir: 850, volume: 0.25 },
+        { mulai: 0.1, durasi: 0.1, frekAwal: 550, frekAkhir: 900, volume: 0.16 },
+        { mulai: 0.18, durasi: 0.07, frekAwal: 600, frekAkhir: 950, volume: 0.09 }
+      ];
+
+      pantulan.forEach(function (p) {
+        var mulai = ctx.currentTime + p.mulai;
+
+        var osc = ctx.createOscillator();
+        var gain = ctx.createGain();
+
+        osc.type = "triangle";
+        osc.frequency.setValueAtTime(p.frekAwal, mulai);
+        osc.frequency.exponentialRampToValueAtTime(p.frekAkhir, mulai + p.durasi * 0.6);
+        osc.frequency.exponentialRampToValueAtTime(p.frekAwal * 0.85, mulai + p.durasi);
+
+        gain.gain.setValueAtTime(0.001, mulai);
+        gain.gain.exponentialRampToValueAtTime(p.volume, mulai + p.durasi * 0.2);
+        gain.gain.exponentialRampToValueAtTime(0.001, mulai + p.durasi);
+
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+
+        osc.start(mulai);
+        osc.stop(mulai + p.durasi + 0.02);
+      });
+    }
+
+    var semuaTombol = document.querySelectorAll(".sound-click");
+    semuaTombol.forEach(function (tombol) {
+      tombol.addEventListener("click", function () {
+        mainkanSuaraKlik();
+      });
+    });
+  </script>
+
+</body>
+</html>
