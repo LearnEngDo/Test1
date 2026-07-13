@@ -1,0 +1,1059 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Review Time! - Latihan Kosakata</title>
+<style>
+  :root{
+    --cream:#FFF7EC;
+    --red:#C8453C;
+    --red-dark:#a3372f;
+    --teal:#2E8B8B;
+    --teal-dark:#1f6464;
+    --gold:#E8A33D;
+    --purple:#8B5FA8;
+    --ink:#3A2E28;
+    --paper:#FFFFFF;
+    --green:#5C9E5C;
+  }
+
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    font-family:'Trebuchet MS','Segoe UI',sans-serif;
+    background:var(--cream);
+    color:var(--ink);
+    line-height:1.5;
+  }
+
+  .wrap{max-width:880px;margin:0 auto;padding:18px 16px 60px;}
+
+  /* HEADER */
+  .hero{
+    background:linear-gradient(135deg,var(--red) 0%, var(--red-dark) 100%);
+    border-radius:24px;
+    padding:34px 24px;
+    text-align:center;
+    color:white;
+    margin-bottom:24px;
+    box-shadow:0 8px 0 rgba(0,0,0,0.08);
+    position:relative;
+    overflow:hidden;
+  }
+  .hero::before{
+    content:"🎒📖🗣️";
+    font-size:28px;
+    display:block;
+    margin-bottom:8px;
+    letter-spacing:14px;
+  }
+  .hero h1{
+    margin:0 0 6px;
+    font-size:30px;
+    font-weight:800;
+  }
+  .hero .sub-en{
+    font-size:15px;
+    opacity:0.92;
+    font-style:italic;
+  }
+  .hero .badge{
+    display:inline-block;
+    margin-top:14px;
+    background:rgba(255,255,255,0.18);
+    border:2px solid rgba(255,255,255,0.5);
+    border-radius:999px;
+    padding:6px 18px;
+    font-size:13px;
+    font-weight:700;
+  }
+
+  /* NAV TABS */
+  .tabs{
+    display:flex;
+    gap:8px;
+    flex-wrap:wrap;
+    margin-bottom:22px;
+    justify-content:center;
+  }
+  .tab-btn{
+    border:none;
+    border-radius:14px;
+    padding:10px 16px;
+    font-size:14px;
+    font-weight:700;
+    cursor:pointer;
+    background:white;
+    color:var(--ink);
+    box-shadow:0 3px 0 rgba(0,0,0,0.1);
+    transition:transform .12s ease;
+  }
+  .tab-btn:hover{transform:translateY(-2px);}
+  .tab-btn.active{
+    background:var(--teal);
+    color:white;
+  }
+
+  .section{display:none;}
+  .section.active{display:block;animation:fadein .25s ease;}
+  @keyframes fadein{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
+
+  .section-title{
+    background:var(--teal);
+    color:white;
+    border-radius:16px;
+    padding:14px 20px;
+    margin-bottom:18px;
+    text-align:center;
+  }
+  .section-title h2{margin:0;font-size:22px;}
+  .section-title .en{font-size:13px;font-style:italic;opacity:0.9;margin-top:2px;}
+
+  /* CARD GRID - click to reveal translation */
+  .card-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
+    gap:14px;
+    margin-bottom:26px;
+  }
+  .vocab-card{
+    background:var(--paper);
+    border-radius:18px;
+    padding:16px 12px;
+    text-align:center;
+    box-shadow:0 4px 0 rgba(0,0,0,0.07);
+    border:3px solid transparent;
+    transition:transform .15s, border-color .15s;
+    cursor:pointer;
+    user-select:none;
+  }
+  .vocab-card:hover{transform:translateY(-3px);border-color:var(--gold);}
+  .vocab-card.revealed{border-color:var(--teal);background:#F2FAF8;}
+  .vocab-card .emoji{
+    font-size:38px;
+    display:block;
+    margin-bottom:0;
+    max-height:0;
+    opacity:0;
+    overflow:hidden;
+    transition:max-height .2s ease, opacity .2s ease;
+  }
+  .vocab-card.revealed .emoji{
+    max-height:50px;
+    opacity:1;
+    margin-bottom:6px;
+  }
+  .vocab-card .id-word{
+    font-weight:800;
+    font-size:16px;
+    color:var(--red);
+    margin-bottom:2px;
+  }
+  .vocab-card .en-word{
+    font-size:12px;
+    color:var(--teal-dark);
+    font-style:italic;
+    font-weight:700;
+    max-height:0;
+    opacity:0;
+    overflow:hidden;
+    transition:max-height .2s ease, opacity .2s ease;
+  }
+  .vocab-card.revealed .en-word{
+    max-height:40px;
+    opacity:1;
+    margin-top:4px;
+  }
+  .vocab-card .tap-hint{
+    font-size:10px;
+    color:#bbb;
+    margin-top:4px;
+  }
+  .vocab-card.revealed .tap-hint{display:none;}
+
+  /* EXPLANATION BOX */
+  .explain{
+    background:#FFF3DC;
+    border-radius:16px;
+    padding:14px 18px;
+    margin:14px 0 22px;
+    font-size:14px;
+    border-left:6px solid var(--gold);
+  }
+  .explain b{color:var(--red-dark);}
+
+  /* SENTENCE PAIR - click to reveal translation */
+  .sentence-row{
+    background:var(--paper);
+    border-radius:16px;
+    padding:14px 18px;
+    margin-bottom:10px;
+    box-shadow:0 3px 0 rgba(0,0,0,0.06);
+    cursor:pointer;
+    user-select:none;
+    transition:background .15s, border-color .15s;
+    border:2px solid transparent;
+  }
+  .sentence-row:hover{border-color:var(--gold);}
+  .sentence-row.revealed{background:#F2FAF8;border-color:var(--teal);}
+  .sentence-row .id{font-weight:700;color:var(--ink);font-size:15px;}
+  .sentence-row .en{
+    color:var(--teal-dark);
+    font-size:14px;
+    font-style:italic;
+    max-height:0;
+    opacity:0;
+    overflow:hidden;
+    transition:max-height .2s ease, opacity .2s ease;
+  }
+  .sentence-row.revealed .en{
+    max-height:60px;
+    opacity:1;
+    margin-top:5px;
+  }
+  .sentence-row .tap-hint{
+    font-size:10px;
+    color:#bbb;
+    margin-top:3px;
+  }
+  .sentence-row.revealed .tap-hint{display:none;}
+
+  /* CONNECTOR CHIPS - click to reveal */
+  .connector-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(130px,1fr));
+    gap:10px;
+    margin-bottom:22px;
+  }
+  .connector-chip{
+    background:var(--paper);
+    border-radius:14px;
+    padding:12px;
+    text-align:center;
+    box-shadow:0 3px 0 rgba(0,0,0,0.06);
+    cursor:pointer;
+    user-select:none;
+    border:2px solid transparent;
+    transition:border-color .15s, background .15s;
+  }
+  .connector-chip:hover{border-color:var(--gold);}
+  .connector-chip.revealed{border-color:var(--teal);background:#F6F0FA;}
+  .connector-chip .id{font-weight:800;color:var(--purple);font-size:16px;}
+  .connector-chip .en{
+    font-size:12px;color:#999;
+    max-height:0;opacity:0;overflow:hidden;
+    transition:max-height .2s ease, opacity .2s ease;
+  }
+  .connector-chip.revealed .en{max-height:30px;opacity:1;margin-top:3px;}
+  .connector-chip .tap-hint{font-size:10px;color:#ccc;margin-top:3px;}
+  .connector-chip.revealed .tap-hint{display:none;}
+
+  /* PRACTICE QUESTION BOX */
+  .practice-box{
+    background:#EAF6F2;
+    border-radius:18px;
+    padding:18px;
+    margin-bottom:14px;
+    border:2px dashed var(--teal);
+  }
+  .practice-box .q-num{
+    display:inline-block;
+    background:var(--teal);
+    color:white;
+    border-radius:50%;
+    width:26px;height:26px;
+    text-align:center;
+    line-height:26px;
+    font-size:13px;
+    font-weight:800;
+    margin-right:8px;
+  }
+  .practice-box .q-text{
+    font-weight:700;
+    font-size:15px;
+    cursor:pointer;
+  }
+  .practice-box .q-text:hover{color:var(--teal-dark);}
+  .practice-box .q-en{
+    font-size:13px;
+    color:var(--teal-dark);
+    font-style:italic;
+    margin-top:6px;
+    max-height:0;
+    opacity:0;
+    overflow:hidden;
+    transition:max-height .2s ease, opacity .2s ease;
+  }
+  .practice-box.revealed .q-en{max-height:60px;opacity:1;}
+  .practice-box .tap-hint{font-size:11px;color:#8db5ae;margin-top:4px;}
+  .practice-box.revealed .tap-hint{display:none;}
+  .practice-box textarea{
+    width:100%;
+    margin-top:10px;
+    border-radius:10px;
+    border:2px solid #cfe8e2;
+    padding:8px 10px;
+    font-family:inherit;
+    font-size:14px;
+    resize:vertical;
+    min-height:38px;
+  }
+
+  /* QUIZ */
+  .quiz-card{
+    background:var(--paper);
+    border-radius:18px;
+    padding:18px;
+    margin-bottom:16px;
+    box-shadow:0 4px 0 rgba(0,0,0,0.07);
+  }
+  .quiz-card .q-num-badge{
+    display:inline-block;
+    background:var(--red);
+    color:white;
+    border-radius:50%;
+    width:28px;height:28px;
+    text-align:center;
+    line-height:28px;
+    font-weight:800;
+    font-size:13px;
+    margin-right:8px;
+  }
+  .quiz-card .q-prompt{font-weight:700;font-size:15px;margin-bottom:12px;}
+  .quiz-options{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:8px;
+  }
+  @media (max-width:480px){.quiz-options{grid-template-columns:1fr;}}
+  .quiz-opt{
+    background:#F6F1E8;
+    border:2px solid #e4dccb;
+    border-radius:12px;
+    padding:9px 12px;
+    font-size:14px;
+    cursor:pointer;
+    text-align:left;
+    transition:background .12s, border-color .12s;
+  }
+  .quiz-opt:hover{background:#FCE9C7;border-color:var(--gold);}
+  .quiz-opt.selected{background:#D8ECE6;border-color:var(--teal);font-weight:700;}
+
+  .quiz-note{
+    text-align:center;
+    font-size:13px;
+    color:#9a8f80;
+    font-style:italic;
+    margin:6px 0 24px;
+  }
+
+  /* dialogue cards for restaurant practice */
+  .dialogue-card{
+    background:var(--paper);
+    border-radius:18px;
+    padding:16px 18px;
+    margin-bottom:14px;
+    box-shadow:0 4px 0 rgba(0,0,0,0.07);
+  }
+  .dialogue-card .d-title{
+    font-weight:800;
+    color:var(--red-dark);
+    margin-bottom:10px;
+    font-size:14px;
+  }
+  .d-line{
+    display:flex;
+    gap:8px;
+    margin-bottom:6px;
+    align-items:flex-start;
+    cursor:pointer;
+    border-radius:10px;
+    padding:6px 8px;
+    transition:background .15s;
+    user-select:none;
+  }
+  .d-line:hover{background:#FFF6E5;}
+  .d-line .speaker{
+    flex-shrink:0;
+    font-size:13px;
+    font-weight:800;
+    color:white;
+    border-radius:8px;
+    padding:2px 8px;
+    height:fit-content;
+  }
+  .d-line .speaker.a{background:var(--teal);}
+  .d-line .speaker.b{background:var(--purple);}
+  .d-line .content{flex:1;}
+  .d-line .id-text{font-size:14px;font-weight:600;}
+  .d-line .en-text{
+    font-size:12px;
+    color:var(--teal-dark);
+    font-style:italic;
+    max-height:0;
+    opacity:0;
+    overflow:hidden;
+    transition:max-height .2s ease, opacity .2s ease;
+  }
+  .d-line.revealed .en-text{max-height:40px;opacity:1;margin-top:3px;}
+
+  footer{
+    text-align:center;
+    color:#a89a87;
+    font-size:12px;
+    margin-top:30px;
+  }
+
+  .divider-note{
+    text-align:center;
+    font-size:13px;
+    background:#F1E6F4;
+    color:var(--purple);
+    border-radius:12px;
+    padding:8px 14px;
+    margin-bottom:18px;
+    font-weight:700;
+  }
+
+  /* MATCH THE CONNECTORS */
+  .match-wrap{
+    position:relative;
+    display:flex;
+    justify-content:space-between;
+    gap:60px;
+    background:var(--paper);
+    border-radius:18px;
+    padding:20px 24px;
+    margin-bottom:10px;
+    box-shadow:0 4px 0 rgba(0,0,0,0.07);
+  }
+  .match-col{display:flex;flex-direction:column;gap:12px;flex:1;}
+  .match-col.right{align-items:flex-end;}
+  .match-item{
+    background:#F6F1E8;
+    border:2px solid #e4dccb;
+    border-radius:10px;
+    padding:9px 16px;
+    font-size:14px;
+    font-weight:700;
+    cursor:pointer;
+    user-select:none;
+    transition:background .12s, border-color .12s, transform .1s;
+    min-width:90px;
+    text-align:center;
+    position:relative;
+    z-index:2;
+  }
+  .match-item:hover{transform:scale(1.04);}
+  .match-item.picked{background:var(--gold);border-color:var(--red-dark);color:white;}
+  .match-item.done{background:#D8ECE6;border-color:var(--teal);color:var(--teal-dark);}
+  .match-lines{
+    position:absolute;
+    top:0;left:0;
+    width:100%;height:100%;
+    pointer-events:none;
+    z-index:1;
+  }
+  @media (max-width:480px){
+    .match-wrap{gap:24px;padding:16px;}
+    .match-item{font-size:12px;padding:7px 10px;min-width:70px;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="hero">
+    <h1>Yuk, Review Lagi! 🌟</h1>
+    <div class="sub-en">Let's Review Again!</div>
+    <div class="badge">Lesson 2 + Lesson 3 + Lesson 10</div>
+  </div>
+
+  <div class="tabs">
+    <button class="tab-btn active" data-tab="vocab">📚 Kosakata</button>
+    <button class="tab-btn" data-tab="connector">🔗 Penghubung</button>
+    <button class="tab-btn" data-tab="boleh">🙋 Boleh vs Bisa</button>
+    <button class="tab-btn" data-tab="ada">📦 Ada vs Tidak Ada</button>
+    <button class="tab-btn" data-tab="practice">✍️ Latihan Bicara</button>
+    <button class="tab-btn" data-tab="quiz">🎯 Quiz</button>
+  </div>
+
+  <!-- ============ VOCAB SECTION ============ -->
+  <div class="section active" id="vocab">
+    <div class="section-title">
+      <h2>Kosakata Sehari-hari</h2>
+      <div class="en">Everyday Vocabulary</div>
+    </div>
+
+    <div class="explain">
+      Look at the picture and the Indonesian word first. Try to guess the meaning before you click! Tap any card to reveal the English translation.
+    </div>
+
+    <div class="card-grid">
+      <div class="vocab-card" data-en="remember"><span class="emoji">🧠</span><div class="id-word">Ingat</div><div class="en-word"></div><div class="tap-hint">tap to reveal</div></div>
+      <div class="vocab-card" data-en="forget"><span class="emoji">❓</span><div class="id-word">Lupa</div><div class="en-word"></div><div class="tap-hint">tap to reveal</div></div>
+      <div class="vocab-card" data-en="understand"><span class="emoji">👍</span><div class="id-word">Paham / Ngerti</div><div class="en-word"></div><div class="tap-hint">tap to reveal</div></div>
+      <div class="vocab-card" data-en="repeat please"><span class="emoji">🔁</span><div class="id-word">Tolong Ulangi</div><div class="en-word"></div><div class="tap-hint">tap to reveal</div></div>
+      <div class="vocab-card" data-en="wait"><span class="emoji">✋</span><div class="id-word">Tunggu</div><div class="en-word"></div><div class="tap-hint">tap to reveal</div></div>
+      <div class="vocab-card" data-en="a moment / shortly"><span class="emoji">⏱️</span><div class="id-word">Sebentar</div><div class="en-word"></div><div class="tap-hint">tap to reveal</div></div>
+      <div class="vocab-card" data-en="sorry"><span class="emoji">🙏</span><div class="id-word">Maaf</div><div class="en-word"></div><div class="tap-hint">tap to reveal</div></div>
+      <div class="vocab-card" data-en="it's okay"><span class="emoji">✅</span><div class="id-word">Tidak apa-apa / Gapapa</div><div class="en-word"></div><div class="tap-hint">tap to reveal</div></div>
+    </div>
+
+    <div class="divider-note">8 Kata Kerja Penting (8 Important Verbs)</div>
+
+    <div class="card-grid">
+      <div class="vocab-card" data-en="sleep"><span class="emoji">😴</span><div class="id-word">Tidur</div><div class="en-word"></div><div class="tap-hint">tap to reveal</div></div>
+      <div class="vocab-card" data-en="speak"><span class="emoji">🗣️</span><div class="id-word">Bicara</div><div class="en-word"></div><div class="tap-hint">tap to reveal</div></div>
+      <div class="vocab-card" data-en="chit chat"><span class="emoji">💬</span><div class="id-word">Ngobrol</div><div class="en-word"></div><div class="tap-hint">tap to reveal</div></div>
+      <div class="vocab-card" data-en="eat"><span class="emoji">🍰</span><div class="id-word">Makan</div><div class="en-word"></div><div class="tap-hint">tap to reveal</div></div>
+      <div class="vocab-card" data-en="meet"><span class="emoji">🤝</span><div class="id-word">Ketemu</div><div class="en-word"></div><div class="tap-hint">tap to reveal</div></div>
+      <div class="vocab-card" data-en="buy"><span class="emoji">🛍️</span><div class="id-word">Beli</div><div class="en-word"></div><div class="tap-hint">tap to reveal</div></div>
+      <div class="vocab-card" data-en="watch"><span class="emoji">🎬</span><div class="id-word">Nonton</div><div class="en-word"></div><div class="tap-hint">tap to reveal</div></div>
+      <div class="vocab-card" data-en="drink"><span class="emoji">🥤</span><div class="id-word">Minum</div><div class="en-word"></div><div class="tap-hint">tap to reveal</div></div>
+      <div class="vocab-card" data-en="study"><span class="emoji">📖</span><div class="id-word">Belajar</div><div class="en-word"></div><div class="tap-hint">tap to reveal</div></div>
+      <div class="vocab-card" data-en="work"><span class="emoji">💼</span><div class="id-word">Kerja</div><div class="en-word"></div><div class="tap-hint">tap to reveal</div></div>
+      <div class="vocab-card" data-en="read"><span class="emoji">📚</span><div class="id-word">Baca</div><div class="en-word"></div><div class="tap-hint">tap to reveal</div></div>
+      <div class="vocab-card" data-en="like"><span class="emoji">😍</span><div class="id-word">Suka</div><div class="en-word"></div><div class="tap-hint">tap to reveal</div></div>
+      <div class="vocab-card" data-en="write"><span class="emoji">✏️</span><div class="id-word">Tulis</div><div class="en-word"></div><div class="tap-hint">tap to reveal</div></div>
+      <div class="vocab-card" data-en="go"><span class="emoji">🚶</span><div class="id-word">Pergi</div><div class="en-word"></div><div class="tap-hint">tap to reveal</div></div>
+      <div class="vocab-card" data-en="go home"><span class="emoji">🏠</span><div class="id-word">Pulang</div><div class="en-word"></div><div class="tap-hint">tap to reveal</div></div>
+      <div class="vocab-card" data-en="pay"><span class="emoji">💳</span><div class="id-word">Bayar</div><div class="en-word"></div><div class="tap-hint">tap to reveal</div></div>
+    </div>
+
+    <div class="divider-note">Kondisi (Condition / How You Feel)</div>
+
+    <div class="card-grid">
+      <div class="vocab-card" data-en="busy"><span class="emoji">😵‍💫</span><div class="id-word">Sibuk</div><div class="en-word"></div><div class="tap-hint">tap to reveal</div></div>
+      <div class="vocab-card" data-en="tired"><span class="emoji">🥱</span><div class="id-word">Capek</div><div class="en-word"></div><div class="tap-hint">tap to reveal</div></div>
+      <div class="vocab-card" data-en="happy"><span class="emoji">😄</span><div class="id-word">Senang</div><div class="en-word"></div><div class="tap-hint">tap to reveal</div></div>
+    </div>
+
+    <div class="explain">
+      <b>Tip:</b> Try to say the meaning out loud BEFORE you tap the card. That's how your brain really learns the word!
+    </div>
+
+    <div class="divider-note">Easy Sentence Pattern (+ / - / ?) — tap a sentence to see the translation</div>
+
+    <div class="sentence-row" data-en="I want to eat, but I'm a little tired. Let me drink water first"><div class="id">(+) Aku mau makan, tapi aku sedikit capek. Aku minum air dulu</div><div class="en"></div><div class="tap-hint">tap to translate</div></div>
+    <div class="sentence-row" data-en="I can't meet right now, I'm busy with work"><div class="id">(-) Aku nggak bisa bertemu sekarang, aku sibuk kerja</div><div class="en"></div><div class="tap-hint">tap to translate</div></div>
+    <div class="sentence-row" data-en="Sorry, I don't understand. Can you repeat again?"><div class="id">(?) Maaf, aku nggak ngerti. Bisa ulangi lagi?</div><div class="en"></div><div class="tap-hint">tap to translate</div></div>
+    <div class="sentence-row" data-en="Who will pay? I'm happy to pay this time"><div class="id">(?) Siapa yang mau bayar? Aku senang bayar kali ini</div><div class="en"></div><div class="tap-hint">tap to translate</div></div>
+    <div class="sentence-row" data-en="Do you want to go there again? I'm happy we can ride a scooter to go there! I want to try riding the train. But I don't know what app I have to use"><div class="id">Mau pergi ke sana lagi? Aku senang kita bisa naik motor pergi ke sana! Aku mau coba naik kereta. Tapi aku tidak tau harus pakai aplikasi apa</div><div class="en"></div><div class="tap-hint">tap to translate</div></div>
+  </div>
+
+  <!-- ============ CONNECTOR SECTION ============ -->
+  <div class="section" id="connector">
+    <div class="section-title">
+      <h2>Kata Penghubung</h2>
+      <div class="en">Connectors</div>
+    </div>
+
+    <div class="explain">
+      Connectors are small words that join two ideas together, like glue between two pieces of paper. Tap a word to see what it means in English.
+    </div>
+
+    <div class="connector-grid">
+      <div class="connector-chip" data-en="in / at"><div class="id">Di</div><div class="en"></div><div class="tap-hint">tap</div></div>
+      <div class="connector-chip" data-en="to"><div class="id">Ke</div><div class="en"></div><div class="tap-hint">tap</div></div>
+      <div class="connector-chip" data-en="from"><div class="id">Dari</div><div class="en"></div><div class="tap-hint">tap</div></div>
+      <div class="connector-chip" data-en="with"><div class="id">Sama / Dengan</div><div class="en"></div><div class="tap-hint">tap</div></div>
+      <div class="connector-chip" data-en="for"><div class="id">Untuk / Buat</div><div class="en"></div><div class="tap-hint">tap</div></div>
+      <div class="connector-chip" data-en="and"><div class="id">Dan</div><div class="en"></div><div class="tap-hint">tap</div></div>
+      <div class="connector-chip" data-en="or"><div class="id">Atau</div><div class="en"></div><div class="tap-hint">tap</div></div>
+      <div class="connector-chip" data-en="but"><div class="id">Tapi</div><div class="en"></div><div class="tap-hint">tap</div></div>
+      <div class="connector-chip" data-en="because"><div class="id">Karena</div><div class="en"></div><div class="tap-hint">tap</div></div>
+      <div class="connector-chip" data-en="so"><div class="id">Jadi</div><div class="en"></div><div class="tap-hint">tap</div></div>
+      <div class="connector-chip" data-en="then"><div class="id">Lalu / Terus</div><div class="en"></div><div class="tap-hint">tap</div></div>
+      <div class="connector-chip" data-en="must / have to"><div class="id">Harus</div><div class="en"></div><div class="tap-hint">tap</div></div>
+      <div class="connector-chip" data-en="still"><div class="id">Masih</div><div class="en"></div><div class="tap-hint">tap</div></div>
+      <div class="connector-chip" data-en="only"><div class="id">Hanya</div><div class="en"></div><div class="tap-hint">tap</div></div>
+    </div>
+
+    <div class="divider-note">Try saying these out loud! (tap to check your translation)</div>
+    <div class="sentence-row" data-en="I eat at home with my family, then we watch a movie together"><div class="id">Aku makan di rumah dengan keluarga, lalu kami nonton film bersama</div><div class="en"></div><div class="tap-hint">tap to translate</div></div>
+    <div class="sentence-row" data-en="I go to the market from my house, and I buy fruit for my mother"><div class="id">Aku pergi ke pasar dari rumah, dan aku beli buah untuk ibu</div><div class="en"></div><div class="tap-hint">tap to translate</div></div>
+    <div class="sentence-row" data-en="I like coffee, but I don't like tea. So, I only order coffee when I go to a café"><div class="id">Aku suka kopi, tapi nggak suka teh. Jadi, aku hanya pesan kopi kalau ke kafe</div><div class="en"></div><div class="tap-hint">tap to translate</div></div>
+    <div class="sentence-row" data-en="I'm tired, so I want to sleep, but I still have to study because there's an exam tomorrow"><div class="id">Aku capek, jadi aku mau tidur, tapi aku masih harus belajar karena ada ujian besok</div><div class="en"></div><div class="tap-hint">tap to translate</div></div>
+    <div class="sentence-row" data-en="I want to study with my friend, but he is still busy, so I'll just study alone first"><div class="id">Aku mau belajar dengan teman aku, tapi dia masih sibuk, jadi aku belajar sendiri dulu</div><div class="en"></div><div class="tap-hint">tap to translate</div></div>
+    <div class="sentence-row" data-en="I bought this from the market, only for you, because I remembered you like this fruit"><div class="id">Aku beli ini dari pasar, hanya untuk kamu, karena aku ingat kamu suka buah ini</div><div class="en"></div><div class="tap-hint">tap to translate</div></div>
+  </div>
+
+  <!-- ============ BOLEH VS BISA ============ -->
+  <div class="section" id="boleh">
+    <div class="section-title">
+      <h2>Boleh vs Bisa</h2>
+      <div class="en">Boleh (Permission) vs Bisa (Ability)</div>
+    </div>
+
+    <div class="explain">
+      <b>Bisa</b> = ability — talks about a skill or what your body/mind can do. <br>
+      <b>Boleh</b> = permission — talks about what is allowed by rules or another person.<br>
+      Easy way to remember: <b>Bisa = Can I (skill)</b>. <b>Boleh = May I (permission)</b>.
+    </div>
+
+    <div class="card-grid">
+      <div class="vocab-card" data-en="can / able to"><span class="emoji">💪</span><div class="id-word">Bisa</div><div class="en-word"></div><div class="tap-hint">tap to reveal</div></div>
+      <div class="vocab-card" data-en="may / allowed to"><span class="emoji">🙋</span><div class="id-word">Boleh</div><div class="en-word"></div><div class="tap-hint">tap to reveal</div></div>
+      <div class="vocab-card" data-en="cannot"><span class="emoji">🚫</span><div class="id-word">Tidak Bisa</div><div class="en-word"></div><div class="tap-hint">tap to reveal</div></div>
+      <div class="vocab-card" data-en="not allowed"><span class="emoji">⛔</span><div class="id-word">Tidak Boleh</div><div class="en-word"></div><div class="tap-hint">tap to reveal</div></div>
+    </div>
+
+    <div class="divider-note">Short Answers</div>
+    <div class="sentence-row" data-en="Yes, I can"><div class="id">Ya, bisa</div><div class="en"></div><div class="tap-hint">tap to translate</div></div>
+    <div class="sentence-row" data-en="No, I can't"><div class="id">Tidak bisa</div><div class="en"></div><div class="tap-hint">tap to translate</div></div>
+    <div class="sentence-row" data-en="Yes, you may"><div class="id">Ya, boleh</div><div class="en"></div><div class="tap-hint">tap to translate</div></div>
+    <div class="sentence-row" data-en="No, you may not"><div class="id">Tidak boleh</div><div class="en"></div><div class="tap-hint">tap to translate</div></div>
+
+    <div class="explain">
+      <b>Extra tip:</b> "Boleh" alone can also simply mean "Sure!" — when you agree to someone's offer. Example: "Mau ikut ke pantai?" → "Boleh!" (Sure!)
+    </div>
+
+    <div class="divider-note">Compare the Pattern (tap each sentence)</div>
+    <div class="sentence-row" data-en="Can I sleep for a while? I'm so tired, to the point I forgot we have class"><div class="id">Bisa aku tidur sebentar? Aku capek banget, sampai aku lupa kita ada kelas</div><div class="en"></div><div class="tap-hint">tap to translate</div></div>
+    <div class="sentence-row" data-en="May I go to the toilet for a moment? I really have to go now"><div class="id">Boleh aku ke toilet sebentar? Aku sudah kebelet</div><div class="en"></div><div class="tap-hint">tap to translate</div></div>
+    <div class="sentence-row" data-en="Can you buy that for me? I'm still busy at work and I forgot to bring money"><div class="id">Bisa kamu beli itu buat aku? Aku masih sibuk kerja dan aku lupa bawa uang</div><div class="en"></div><div class="tap-hint">tap to translate</div></div>
+    <div class="sentence-row" data-en="I'm not allowed to speak English in this class. If I do, there will be punishment for me"><div class="id">Aku tidak boleh bicara bahasa Inggris di kelas ini. Kalau tidak, akan ada hukuman buat aku</div><div class="en"></div><div class="tap-hint">tap to translate</div></div>
+    <div class="sentence-row" data-en="You're not allowed to eat this. You have an allergy, so wait a moment, I'll find something else"><div class="id">Kamu tidak boleh makan ini. Kamu punya alergi, jadi tunggu sebentar, aku cari yang lain</div><div class="en"></div><div class="tap-hint">tap to translate</div></div>
+  </div>
+
+  <!-- ============ ADA VS TIDAK ADA ============ -->
+  <div class="section" id="ada">
+    <div class="section-title">
+      <h2>Ada vs Tidak Ada</h2>
+      <div class="en">There Is vs There Isn't</div>
+    </div>
+
+    <div class="explain">
+      <b>Ada</b> = there is / there are (something exists). <br>
+      <b>Tidak ada</b> = there isn't / there aren't (nothing exists).<br>
+      "Ada" can sometimes replace "punya" (to have). Example: "Aku ada makanan di rumah" = "I have food at home."
+    </div>
+
+    <div class="card-grid">
+      <div class="vocab-card" data-en="there is"><span class="emoji">✅</span><div class="id-word">Ada</div><div class="en-word"></div><div class="tap-hint">tap to reveal</div></div>
+      <div class="vocab-card" data-en="there isn't / none"><span class="emoji">🚫</span><div class="id-word">Tidak Ada</div><div class="en-word"></div><div class="tap-hint">tap to reveal</div></div>
+      <div class="vocab-card" data-en="what's the matter?"><span class="emoji">❔</span><div class="id-word">Ada apa?</div><div class="en-word"></div><div class="tap-hint">tap to reveal</div></div>
+      <div class="vocab-card" data-en="anything else?"><span class="emoji">➕</span><div class="id-word">Ada lagi?</div><div class="en-word"></div><div class="tap-hint">tap to reveal</div></div>
+    </div>
+
+    <div class="divider-note">Counting with Ada (tap to translate)</div>
+    <div class="sentence-row" data-en="There are two bananas"><div class="id">🍌🍌 Ada dua pisang</div><div class="en"></div><div class="tap-hint">tap to translate</div></div>
+    <div class="sentence-row" data-en="There are five oranges"><div class="id">🍊🍊🍊🍊🍊 Ada lima jeruk</div><div class="en"></div><div class="tap-hint">tap to translate</div></div>
+    <div class="sentence-row" data-en="There are four books"><div class="id">📚📚📚📚 Ada empat buku</div><div class="en"></div><div class="tap-hint">tap to translate</div></div>
+    <div class="sentence-row" data-en="There are nine cars"><div class="id">🚗 x 9 Ada sembilan mobil</div><div class="en"></div><div class="tap-hint">tap to translate</div></div>
+    <div class="sentence-row" data-en="There are three scooters"><div class="id">🛵🛵🛵 Ada tiga motor</div><div class="en"></div><div class="tap-hint">tap to translate</div></div>
+    <div class="sentence-row" data-en="There are five people"><div class="id">🙋‍♂️🙋‍♀️🙋‍♂️🙋‍♀️🙋‍♂️ Ada lima orang</div><div class="en"></div><div class="tap-hint">tap to translate</div></div>
+
+    <div class="divider-note">Ask and Answer (tap to translate)</div>
+    <div class="sentence-row" data-en="Is there any black coffee? Yes, there is!"><div class="id">Ada kopi hitam? → Ya, ada!</div><div class="en"></div><div class="tap-hint">tap to translate</div></div>
+    <div class="sentence-row" data-en="Is there any tissue? Sorry, there isn't any"><div class="id">Ada tissue? → Maaf, tidak ada</div><div class="en"></div><div class="tap-hint">tap to translate</div></div>
+    <div class="sentence-row" data-en="Is there food there? No. Just drinks"><div class="id">Ada makanan di sana? → Tidak ada. Minuman aja</div><div class="en"></div><div class="tap-hint">tap to translate</div></div>
+
+    <div class="divider-note">Di Restoran (At the Restaurant) — tap each line to see the translation</div>
+
+    <div class="dialogue-card">
+      <div class="d-title">Dialog 1 — Pesan Minuman (Ordering a Drink)</div>
+      <div class="d-line" data-en="Is there zero sugar coke?"><span class="speaker a">A</span><div class="content"><div class="id-text">Ada coke zero?</div><div class="en-text"></div></div></div>
+      <div class="d-line" data-en="Yes there is. How many do you want?"><span class="speaker b">B</span><div class="content"><div class="id-text">Ada. Mau berapa?</div><div class="en-text"></div></div></div>
+      <div class="d-line" data-en="I want one"><span class="speaker a">A</span><div class="content"><div class="id-text">Mau satu</div><div class="en-text"></div></div></div>
+    </div>
+
+    <div class="dialogue-card">
+      <div class="d-title">Dialog 2 — Menu Western (Western Menu)</div>
+      <div class="d-line" data-en="Is there a western food menu?"><span class="speaker a">A</span><div class="content"><div class="id-text">Ada menu makanan Western?</div><div class="en-text"></div></div></div>
+      <div class="d-line" data-en="There is. We only have pizza. Do you want this?"><span class="speaker b">B</span><div class="content"><div class="id-text">Ada. Kami punya pizza saja. Anda mau ini?</div><div class="en-text"></div></div></div>
+      <div class="d-line" data-en="Sure / Yes, that's fine"><span class="speaker a">A</span><div class="content"><div class="id-text">Boleh</div><div class="en-text"></div></div></div>
+    </div>
+
+    <div class="dialogue-card">
+      <div class="d-title">Dialog 3 — Cari Tempat Duduk (Looking for a Seat)</div>
+      <div class="d-line" data-en="Is there an empty table by the window?"><span class="speaker a">A</span><div class="content"><div class="id-text">Ada meja kosong dekat jendela?</div><div class="en-text"></div></div></div>
+      <div class="d-line" data-en="Sorry, there isn't. Only seats near the kitchen are left"><span class="speaker b">B</span><div class="content"><div class="id-text">Maaf, tidak ada. Hanya ada kursi dekat dapur</div><div class="en-text"></div></div></div>
+      <div class="d-line" data-en="It's okay, that's fine"><span class="speaker a">A</span><div class="content"><div class="id-text">Tidak apa-apa, itu boleh</div><div class="en-text"></div></div></div>
+    </div>
+
+    <div class="dialogue-card">
+      <div class="d-title">Dialog 4 — Tanya Rasa Pedas (Asking About Spice Level)</div>
+      <div class="d-line" data-en="Is there a spicy version of this food?"><span class="speaker a">A</span><div class="content"><div class="id-text">Ada versi pedas untuk makanan ini?</div><div class="en-text"></div></div></div>
+      <div class="d-line" data-en="There is, but only a little spicy. Do you want to try it?"><span class="speaker b">B</span><div class="content"><div class="id-text">Ada, tapi hanya sedikit pedas. Mau coba?</div><div class="en-text"></div></div></div>
+      <div class="d-line" data-en="Sure, I want to try"><span class="speaker a">A</span><div class="content"><div class="id-text">Boleh, aku mau coba</div><div class="en-text"></div></div></div>
+    </div>
+
+    <div class="dialogue-card">
+      <div class="d-title">Dialog 5 — Minta Bayar (Asking for the Bill)</div>
+      <div class="d-line" data-en="Is the bill ready? I have to go home soon"><span class="speaker a">A</span><div class="content"><div class="id-text">Ada tagihan? Aku harus pulang sebentar lagi</div><div class="en-text"></div></div></div>
+      <div class="d-line" data-en="There is, wait a moment please"><span class="speaker b">B</span><div class="content"><div class="id-text">Ada, tunggu sebentar ya</div><div class="en-text"></div></div></div>
+      <div class="d-line" data-en="Okay, I'll pay now"><span class="speaker a">A</span><div class="content"><div class="id-text">Oke, aku bayar sekarang</div><div class="en-text"></div></div></div>
+    </div>
+
+    <div class="divider-note">New Words from this Lesson (tap to reveal)</div>
+    <div class="card-grid">
+      <div class="vocab-card" data-en="picture"><span class="emoji">🖼️</span><div class="id-word">Gambar</div><div class="en-word"></div><div class="tap-hint">tap to reveal</div></div>
+      <div class="vocab-card" data-en="tasty"><span class="emoji">😋</span><div class="id-word">Enak</div><div class="en-word"></div><div class="tap-hint">tap to reveal</div></div>
+      <div class="vocab-card" data-en="man / male"><span class="emoji">👨</span><div class="id-word">Laki-laki</div><div class="en-word"></div><div class="tap-hint">tap to reveal</div></div>
+      <div class="vocab-card" data-en="woman / female"><span class="emoji">👩</span><div class="id-word">Perempuan</div><div class="en-word"></div><div class="tap-hint">tap to reveal</div></div>
+      <div class="vocab-card" data-en="money"><span class="emoji">💵</span><div class="id-word">Uang</div><div class="en-word"></div><div class="tap-hint">tap to reveal</div></div>
+      <div class="vocab-card" data-en="cold / hot / warm"><span class="emoji">🥶</span><div class="id-word">Dingin / Panas / Hangat</div><div class="en-word"></div><div class="tap-hint">tap to reveal</div></div>
+    </div>
+  </div>
+
+  <!-- ============ PRACTICE / SPEAKING ============ -->
+  <div class="section" id="practice">
+    <div class="section-title">
+      <h2>Latihan Bicara</h2>
+      <div class="en">Speaking Practice — Use the vocabulary you just learned!</div>
+    </div>
+
+    <div class="explain">
+      Answer in Indonesian using simple words from this lesson. There's no single correct sentence — just try your best! Tap the question to check the English meaning if you get stuck.
+    </div>
+
+    <div class="practice-box" data-en="How many people are there in your Indonesian friends' group chat?">
+      <span class="q-num">1</span><span class="q-text">Ada berapa orang di group chat teman Indonesia kamu?</span>
+      <div class="q-en"></div>
+      <div class="tap-hint">tap the question to translate</div>
+      <textarea placeholder="Jawab disini..."></textarea>
+    </div>
+
+    <div class="practice-box" data-en="What is your favorite activity when you're in Indonesia?">
+      <span class="q-num">2</span><span class="q-text">Apa aktivitas favorit kamu saat di Indonesia?</span>
+      <div class="q-en"></div>
+      <div class="tap-hint">tap the question to translate</div>
+      <textarea placeholder="Jawab disini..."></textarea>
+    </div>
+
+    <div class="practice-box" data-en="May I ask, why do you want to live in Indonesia?">
+      <span class="q-num">3</span><span class="q-text">Boleh aku tanya, kenapa kamu mau tinggal di Indonesia?</span>
+      <div class="q-en"></div>
+      <div class="tap-hint">tap the question to translate</div>
+      <textarea placeholder="Jawab disini..."></textarea>
+    </div>
+
+    <div class="practice-box" data-en="Can you speak Indonesian? Answer with 'Ya, bisa' or 'Tidak bisa'">
+      <span class="q-num">4</span><span class="q-text">Bisa kamu bicara bahasa Indonesia?</span>
+      <div class="q-en"></div>
+      <div class="tap-hint">tap the question to translate</div>
+      <textarea placeholder="Jawab disini..."></textarea>
+    </div>
+
+    <div class="practice-box" data-en="Where do you want to go today?">
+      <span class="q-num">5</span><span class="q-text">Kamu mau pergi kemana hari ini?</span>
+      <div class="q-en"></div>
+      <div class="tap-hint">tap the question to translate</div>
+      <textarea placeholder="Jawab disini..."></textarea>
+    </div>
+
+    <div class="practice-box" data-en="How many people are there in your house?">
+      <span class="q-num">6</span><span class="q-text">Ada berapa orang di rumah kamu?</span>
+      <div class="q-en"></div>
+      <div class="tap-hint">tap the question to translate</div>
+      <textarea placeholder="Jawab disini..."></textarea>
+    </div>
+
+    <div class="practice-box" data-en="Do you remember where you lived when you were in Indonesia?">
+      <span class="q-num">7</span><span class="q-text">Apakah kamu ingat di mana kamu tinggal saat kamu di Indonesia?</span>
+      <div class="q-en"></div>
+      <div class="tap-hint">tap the question to translate</div>
+      <textarea placeholder="Jawab disini..."></textarea>
+    </div>
+
+    <div class="practice-box" data-en="Do you like to go to the city or to nature? Why?">
+      <span class="q-num">8</span><span class="q-text">Kamu suka pergi ke city atau ke nature? Kenapa?</span>
+      <div class="q-en"></div>
+      <div class="tap-hint">tap the question to translate</div>
+      <textarea placeholder="Jawab disini..."></textarea>
+    </div>
+  </div>
+
+  <!-- ============ QUIZ ============ -->
+  <div class="section" id="quiz">
+    <div class="section-title">
+      <h2>Quiz Waktunya!</h2>
+      <div class="en">Quiz Time — Click an answer to check your guess (no answer key shown)</div>
+    </div>
+    <div class="quiz-note">Click on an option to mark your choice. Talk about your answers with your teacher!</div>
+
+    <div class="quiz-card">
+      <span class="q-num-badge">1</span><span class="q-prompt">"Remember" in Indonesian is...</span>
+      <div class="quiz-options">
+        <div class="quiz-opt">Lupa</div>
+        <div class="quiz-opt">Ingat</div>
+        <div class="quiz-opt">Paham</div>
+        <div class="quiz-opt">Tunggu</div>
+      </div>
+    </div>
+
+    <div class="quiz-card">
+      <span class="q-num-badge">2</span><span class="q-prompt">🎬 This emoji matches which word?</span>
+      <div class="quiz-options">
+        <div class="quiz-opt">Makan</div>
+        <div class="quiz-opt">Minum</div>
+        <div class="quiz-opt">Nonton</div>
+        <div class="quiz-opt">Beli</div>
+      </div>
+    </div>
+
+    <div class="quiz-card">
+      <span class="q-num-badge">3</span><span class="q-prompt">"With" in Indonesian (informal) is...</span>
+      <div class="quiz-options">
+        <div class="quiz-opt">Untuk</div>
+        <div class="quiz-opt">Dari</div>
+        <div class="quiz-opt">Sama</div>
+        <div class="quiz-opt">Dan</div>
+      </div>
+    </div>
+
+    <div class="quiz-card">
+      <span class="q-num-badge">4</span><span class="q-prompt">Which connector means "because"?</span>
+      <div class="quiz-options">
+        <div class="quiz-opt">Jadi</div>
+        <div class="quiz-opt">Karena</div>
+        <div class="quiz-opt">Tapi</div>
+        <div class="quiz-opt">Lalu</div>
+      </div>
+    </div>
+
+    <div class="quiz-card">
+      <span class="q-num-badge">5</span><span class="q-prompt">"Bisa kamu beli itu?" is asking about...</span>
+      <div class="quiz-options">
+        <div class="quiz-opt">Permission (boleh)</div>
+        <div class="quiz-opt">Ability (bisa)</div>
+        <div class="quiz-opt">Counting (ada)</div>
+        <div class="quiz-opt">Location (di)</div>
+      </div>
+    </div>
+
+    <div class="quiz-card">
+      <span class="q-num-badge">6</span><span class="q-prompt">Which one means "May I"? (asking permission)</span>
+      <div class="quiz-options">
+        <div class="quiz-opt">Bisa saya...?</div>
+        <div class="quiz-opt">Boleh saya...?</div>
+        <div class="quiz-opt">Ada saya...?</div>
+        <div class="quiz-opt">Suka saya...?</div>
+      </div>
+    </div>
+
+    <div class="quiz-card">
+      <span class="q-num-badge">7</span><span class="q-prompt">"Tidak ada" means...</span>
+      <div class="quiz-options">
+        <div class="quiz-opt">There is</div>
+        <div class="quiz-opt">There isn't</div>
+        <div class="quiz-opt">I want</div>
+        <div class="quiz-opt">I forget</div>
+      </div>
+    </div>
+
+    <div class="quiz-card">
+      <span class="q-num-badge">8</span><span class="q-prompt">🍊🍊🍊🍊🍊 How do you say "There are 5 oranges"?</span>
+      <div class="quiz-options">
+        <div class="quiz-opt">Ada lima jeruk</div>
+        <div class="quiz-opt">Tidak ada jeruk</div>
+        <div class="quiz-opt">Aku suka jeruk</div>
+        <div class="quiz-opt">Jeruk lima ada</div>
+      </div>
+    </div>
+
+    <div class="quiz-card">
+      <span class="q-num-badge">9</span><span class="q-prompt">What does "Tolong ulangi" mean?</span>
+      <div class="quiz-options">
+        <div class="quiz-opt">Wait a moment</div>
+        <div class="quiz-opt">Repeat please</div>
+        <div class="quiz-opt">I understand</div>
+        <div class="quiz-opt">It's okay</div>
+      </div>
+    </div>
+
+    <div class="quiz-card">
+      <span class="q-num-badge">10</span><span class="q-prompt">Someone offers you food and you accept. What do you say?</span>
+      <div class="quiz-options">
+        <div class="quiz-opt">Tidak boleh</div>
+        <div class="quiz-opt">Boleh</div>
+        <div class="quiz-opt">Lupa</div>
+        <div class="quiz-opt">Tidak ada</div>
+      </div>
+    </div>
+
+    <div class="divider-note">Match the Connectors — Tap one word on the left, then tap its meaning on the right</div>
+    <div class="match-wrap">
+      <svg id="matchLines" class="match-lines"></svg>
+      <div class="match-col left">
+        <div class="match-item" data-match="m1">Tapi</div>
+        <div class="match-item" data-match="m2">Karena</div>
+        <div class="match-item" data-match="m3">Dan</div>
+        <div class="match-item" data-match="m4">Atau</div>
+        <div class="match-item" data-match="m5">Jadi</div>
+        <div class="match-item" data-match="m6">Dengan</div>
+      </div>
+      <div class="match-col right">
+        <div class="match-item" data-match="m3">and</div>
+        <div class="match-item" data-match="m5">so</div>
+        <div class="match-item" data-match="m1">but</div>
+        <div class="match-item" data-match="m6">with</div>
+        <div class="match-item" data-match="m2">because</div>
+        <div class="match-item" data-match="m4">or</div>
+      </div>
+    </div>
+    <div class="quiz-note">Tap again to undo a match. No answer key — check with your teacher!</div>
+  </div>
+
+  <footer>Learn with JILL 🇮🇩 — Review Material</footer>
+</div>
+
+<script>
+  // tab switching
+  const tabs = document.querySelectorAll('.tab-btn');
+  const sections = document.querySelectorAll('.section');
+  tabs.forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      tabs.forEach(b=>b.classList.remove('active'));
+      sections.forEach(s=>s.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById(btn.dataset.tab).classList.add('active');
+      window.scrollTo({top:0,behavior:'smooth'});
+    });
+  });
+
+  // quiz selection toggle (no correctness shown, just marks the pick)
+  document.querySelectorAll('.quiz-card').forEach(card=>{
+    const opts = card.querySelectorAll('.quiz-opt');
+    opts.forEach(opt=>{
+      opt.addEventListener('click', ()=>{
+        opts.forEach(o=>o.classList.remove('selected'));
+        opt.classList.add('selected');
+      });
+    });
+  });
+
+  // vocab cards: click to reveal English
+  document.querySelectorAll('.vocab-card').forEach(card=>{
+    const enWordEl = card.querySelector('.en-word');
+    const enText = card.dataset.en;
+    if(enWordEl && enText){ enWordEl.textContent = enText; }
+    card.addEventListener('click', ()=>{
+      card.classList.toggle('revealed');
+    });
+  });
+
+  // sentence rows: click to reveal English
+  document.querySelectorAll('.sentence-row').forEach(row=>{
+    const enEl = row.querySelector('.en');
+    const enText = row.dataset.en;
+    if(enEl && enText){ enEl.textContent = enText; }
+    row.addEventListener('click', ()=>{
+      row.classList.toggle('revealed');
+    });
+  });
+
+  // connector chips: click to reveal English
+  document.querySelectorAll('.connector-chip').forEach(chip=>{
+    const enEl = chip.querySelector('.en');
+    const enText = chip.dataset.en;
+    if(enEl && enText){ enEl.textContent = enText; }
+    chip.addEventListener('click', ()=>{
+      chip.classList.toggle('revealed');
+    });
+  });
+
+  // dialogue lines: click to reveal English
+  document.querySelectorAll('.d-line').forEach(line=>{
+    const enEl = line.querySelector('.en-text');
+    const enText = line.dataset.en;
+    if(enEl && enText){ enEl.textContent = enText; }
+    line.addEventListener('click', ()=>{
+      line.classList.toggle('revealed');
+    });
+  });
+
+  // practice question: click question text to reveal translation
+  document.querySelectorAll('.practice-box').forEach(box=>{
+    const qText = box.querySelector('.q-text');
+    const enEl = box.querySelector('.q-en');
+    const enText = box.dataset.en;
+    if(enEl && enText){ enEl.textContent = enText; }
+    qText.addEventListener('click', ()=>{
+      box.classList.toggle('revealed');
+    });
+  });
+
+  // match the connectors activity
+  (function(){
+    const wrap = document.querySelector('.match-wrap');
+    if(!wrap) return;
+    const svg = document.getElementById('matchLines');
+    let picked = null; // {el, key, side}
+    const matched = {}; // key -> {left, right}
+
+    function drawLines(){
+      svg.innerHTML = '';
+      const wrapRect = wrap.getBoundingClientRect();
+      svg.setAttribute('viewBox', `0 0 ${wrapRect.width} ${wrapRect.height}`);
+      Object.values(matched).forEach(pair=>{
+        const lRect = pair.left.getBoundingClientRect();
+        const rRect = pair.right.getBoundingClientRect();
+        const x1 = lRect.right - wrapRect.left;
+        const y1 = lRect.top + lRect.height/2 - wrapRect.top;
+        const x2 = rRect.left - wrapRect.left;
+        const y2 = rRect.top + rRect.height/2 - wrapRect.top;
+        const line = document.createElementNS('http://www.w3.org/2000/svg','line');
+        line.setAttribute('x1', x1); line.setAttribute('y1', y1);
+        line.setAttribute('x2', x2); line.setAttribute('y2', y2);
+        line.setAttribute('stroke', '#2E8B8B');
+        line.setAttribute('stroke-width', '3');
+        line.setAttribute('stroke-linecap', 'round');
+        svg.appendChild(line);
+      });
+    }
+
+    wrap.querySelectorAll('.match-item').forEach(item=>{
+      item.addEventListener('click', ()=>{
+        const key = item.dataset.match;
+        const side = item.closest('.match-col').classList.contains('left') ? 'left' : 'right';
+
+        // if this item is already matched, unmatch it
+        if(item.classList.contains('done')){
+          delete matched[key];
+          wrap.querySelectorAll(`.match-item[data-match="${key}"]`).forEach(el=>el.classList.remove('done'));
+          drawLines();
+          return;
+        }
+
+        if(!picked){
+          picked = {el:item, key, side};
+          item.classList.add('picked');
+          return;
+        }
+
+        if(picked.el === item){
+          item.classList.remove('picked');
+          picked = null;
+          return;
+        }
+
+        if(picked.side === side){
+          // switch selection to the new item on same side
+          picked.el.classList.remove('picked');
+          picked = {el:item, key, side};
+          item.classList.add('picked');
+          return;
+        }
+
+        // different side picked -> make a match attempt (no correctness check shown)
+        const leftEl = side === 'left' ? item : picked.el;
+        const rightEl = side === 'right' ? item : picked.el;
+
+        picked.el.classList.remove('picked');
+        leftEl.classList.add('done');
+        rightEl.classList.add('done');
+        matched[leftEl.dataset.match + '_' + rightEl.dataset.match + '_' + Math.random()] = {left:leftEl, right:rightEl};
+        picked = null;
+        drawLines();
+      });
+    });
+
+    window.addEventListener('resize', drawLines);
+  })();
+</script>
+</body>
+</html>
