@@ -50,48 +50,84 @@
   .button-container {
     display: flex;
     flex-wrap: wrap;
-    gap: 16px;
+    gap: 24px;
     justify-content: center;
-    max-width: 800px;
+    max-width: 900px;
     margin-bottom: 30px;
   }
 
   .unit-box {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 130px;
-    height: 90px;
-    border-radius: 16px;
+    position: relative;
+    display: block;
+    width: 150px;
+    height: 150px;
+    margin-top: 15px;
     text-decoration: none;
-    font-weight: bold;
-    font-size: 17px;
+    font-family: 'Chewy', cursive;
+    font-weight: normal;
+    font-size: 19px;
     color: #1B3A4B;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-    transition: transform 0.15s, box-shadow 0.15s;
     cursor: pointer;
-    border: 3px solid;
+    transition: transform 0.15s;
+    filter: drop-shadow(0 4px 6px rgba(0,0,0,0.15));
+  }
+
+  .heart-layer {
+    position: absolute;
+    clip-path: url(#heartClip);
+  }
+
+  .heart-abu {
+    inset: 0;
+    background: #D6D6D6;
+  }
+
+  .heart-putih {
+    inset: 2px;
+    background: #FFFFFF;
+  }
+
+  .heart-pinggir {
+    inset: 6px;
+    background: var(--warna-pinggir);
+  }
+
+  .heart-isi {
+    inset: 9px;
+    background: var(--warna-isi);
+  }
+
+  .unit-box .label {
+    position: absolute;
+    z-index: 5;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%;
+    text-align: center;
+    font-family: 'Chewy', cursive;
+    font-weight: normal;
+    font-size: 19px;
   }
 
   .unit-box:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 6px 14px rgba(0,0,0,0.15);
+    transform: translateY(-4px) scale(1.05);
   }
 
   .unit-box:active {
-    transform: translateY(-1px) scale(0.97);
+    transform: scale(0.95);
   }
 
-  .unit-1 { background-color: #FFD966; border-color: #E0B94D; }
-  .unit-2 { background-color: #A8D8D0; border-color: #7CB8AE; }
-  .unit-3 { background-color: #F4C2C2; border-color: #E098A0; }
-  .unit-4 { background-color: #B8D4E8; border-color: #8FB4D4; }
-  .unit-5 { background-color: #D4B8E8; border-color: #B48FD4; }
-  .unit-6 { background-color: #FFC299; border-color: #E0A070; }
-  .unit-7 { background-color: #C2E8B8; border-color: #96C989; }
-  .unit-8 { background-color: #B8E8DE; border-color: #8FCABE; }
-  .unit-9 { background-color: #F0D9B8; border-color: #D1B98C; }
-  .unit-10 { background-color: #E8B8C2; border-color: #C98F9C; }
+  .unit-1 { --warna-isi: #FFD966; --warna-pinggir: #E0B94D; }
+  .unit-2 { --warna-isi: #A8D8D0; --warna-pinggir: #7CB8AE; }
+  .unit-3 { --warna-isi: #F4C2C2; --warna-pinggir: #E098A0; }
+  .unit-4 { --warna-isi: #B8D4E8; --warna-pinggir: #8FB4D4; }
+  .unit-5 { --warna-isi: #D4B8E8; --warna-pinggir: #B48FD4; }
+  .unit-6 { --warna-isi: #FFC299; --warna-pinggir: #E0A070; }
+  .unit-7 { --warna-isi: #C2E8B8; --warna-pinggir: #96C989; }
+  .unit-8 { --warna-isi: #B8E8DE; --warna-pinggir: #8FCABE; }
+  .unit-9 { --warna-isi: #F0D9B8; --warna-pinggir: #D1B98C; }
+  .unit-10 { --warna-isi: #E8B8C2; --warna-pinggir: #C98F9C; }
 
   .special-container {
     display: flex;
@@ -131,19 +167,27 @@
 </head>
 <body>
 
+  <svg width="0" height="0" style="position:absolute">
+    <defs>
+      <clipPath id="heartClip" clipPathUnits="objectBoundingBox">
+        <path d="M0.5,0.88 C0.5,0.88 0.1,0.6 0.1,0.35 C0.1,0.15 0.28,0.02 0.45,0.08 C0.5,0.1 0.5,0.18 0.5,0.18 C0.5,0.18 0.5,0.1 0.55,0.08 C0.72,0.02 0.9,0.15 0.9,0.35 C0.9,0.6 0.5,0.88 0.5,0.88 Z"/>
+      </clipPath>
+    </defs>
+  </svg>
+
   <h1>Learn <span class="warna-eng">Eng</span><span class="warna-do">do</span></h1>
 
   <div class="button-container">
-    <a href="https://learnengdo.com/Unit_1" class="unit-box unit-1 sound-click">Unit 1</a>
-    <a href="https://learnengdo.com/Unit_2" class="unit-box unit-2 sound-click">Unit 2</a>
-    <a href="https://learnengdo.com/Unit_3" class="unit-box unit-3 sound-click">Unit 3</a>
-    <a href="https://learnengdo.com/Unit_4" class="unit-box unit-4 sound-click">Unit 4</a>
-    <a href="https://learnengdo.com/Unit_5" class="unit-box unit-5 sound-click">Unit 5</a>
-    <a href="https://learnengdo.com/Unit_6" class="unit-box unit-6 sound-click">Unit 6</a>
-    <a href="https://learnengdo.com/Unit_7" class="unit-box unit-7 sound-click">Unit 7</a>
-    <a href="https://learnengdo.com/Unit_8" class="unit-box unit-8 sound-click">Unit 8</a>
-    <a href="https://learnengdo.com/Unit_9" class="unit-box unit-9 sound-click">Unit 9</a>
-    <a href="https://learnengdo.com/Unit_10" class="unit-box unit-10 sound-click">Unit 10</a>
+    <a href="https://learnengdo.com/Unit_1" class="unit-box unit-1 sound-click"><span class="heart-layer heart-abu"></span><span class="heart-layer heart-putih"></span><span class="heart-layer heart-pinggir"></span><span class="heart-layer heart-isi"></span><span class="label">Unit 1</span></a>
+    <a href="https://learnengdo.com/Unit_2" class="unit-box unit-2 sound-click"><span class="heart-layer heart-abu"></span><span class="heart-layer heart-putih"></span><span class="heart-layer heart-pinggir"></span><span class="heart-layer heart-isi"></span><span class="label">Unit 2</span></a>
+    <a href="https://learnengdo.com/Unit_3" class="unit-box unit-3 sound-click"><span class="heart-layer heart-abu"></span><span class="heart-layer heart-putih"></span><span class="heart-layer heart-pinggir"></span><span class="heart-layer heart-isi"></span><span class="label">Unit 3</span></a>
+    <a href="https://learnengdo.com/Unit_4" class="unit-box unit-4 sound-click"><span class="heart-layer heart-abu"></span><span class="heart-layer heart-putih"></span><span class="heart-layer heart-pinggir"></span><span class="heart-layer heart-isi"></span><span class="label">Unit 4</span></a>
+    <a href="https://learnengdo.com/Unit_5" class="unit-box unit-5 sound-click"><span class="heart-layer heart-abu"></span><span class="heart-layer heart-putih"></span><span class="heart-layer heart-pinggir"></span><span class="heart-layer heart-isi"></span><span class="label">Unit 5</span></a>
+    <a href="https://learnengdo.com/Unit_6" class="unit-box unit-6 sound-click"><span class="heart-layer heart-abu"></span><span class="heart-layer heart-putih"></span><span class="heart-layer heart-pinggir"></span><span class="heart-layer heart-isi"></span><span class="label">Unit 6</span></a>
+    <a href="https://learnengdo.com/Unit_7" class="unit-box unit-7 sound-click"><span class="heart-layer heart-abu"></span><span class="heart-layer heart-putih"></span><span class="heart-layer heart-pinggir"></span><span class="heart-layer heart-isi"></span><span class="label">Unit 7</span></a>
+    <a href="https://learnengdo.com/Unit_8" class="unit-box unit-8 sound-click"><span class="heart-layer heart-abu"></span><span class="heart-layer heart-putih"></span><span class="heart-layer heart-pinggir"></span><span class="heart-layer heart-isi"></span><span class="label">Unit 8</span></a>
+    <a href="https://learnengdo.com/Unit_9" class="unit-box unit-9 sound-click"><span class="heart-layer heart-abu"></span><span class="heart-layer heart-putih"></span><span class="heart-layer heart-pinggir"></span><span class="heart-layer heart-isi"></span><span class="label">Unit 9</span></a>
+    <a href="https://learnengdo.com/Unit_10" class="unit-box unit-10 sound-click"><span class="heart-layer heart-abu"></span><span class="heart-layer heart-putih"></span><span class="heart-layer heart-pinggir"></span><span class="heart-layer heart-isi"></span><span class="label">Unit 10</span></a>
   </div>
 
   <div class="special-container">
@@ -156,33 +200,25 @@
       var AudioContext = window.AudioContext || window.webkitAudioContext;
       var ctx = new AudioContext();
 
-      var pantulan = [
-        { mulai: 0, durasi: 0.14, frekAwal: 500, frekAkhir: 850, volume: 0.25 },
-        { mulai: 0.1, durasi: 0.1, frekAwal: 550, frekAkhir: 900, volume: 0.16 },
-        { mulai: 0.18, durasi: 0.07, frekAwal: 600, frekAkhir: 950, volume: 0.09 }
-      ];
+      var mulai = ctx.currentTime;
 
-      pantulan.forEach(function (p) {
-        var mulai = ctx.currentTime + p.mulai;
+      var osc = ctx.createOscillator();
+      var gain = ctx.createGain();
 
-        var osc = ctx.createOscillator();
-        var gain = ctx.createGain();
+      osc.type = "sine";
+      osc.frequency.setValueAtTime(420, mulai);
+      osc.frequency.exponentialRampToValueAtTime(950, mulai + 0.08);
+      osc.frequency.exponentialRampToValueAtTime(750, mulai + 0.15);
 
-        osc.type = "triangle";
-        osc.frequency.setValueAtTime(p.frekAwal, mulai);
-        osc.frequency.exponentialRampToValueAtTime(p.frekAkhir, mulai + p.durasi * 0.6);
-        osc.frequency.exponentialRampToValueAtTime(p.frekAwal * 0.85, mulai + p.durasi);
+      gain.gain.setValueAtTime(0.001, mulai);
+      gain.gain.exponentialRampToValueAtTime(0.28, mulai + 0.02);
+      gain.gain.exponentialRampToValueAtTime(0.001, mulai + 0.17);
 
-        gain.gain.setValueAtTime(0.001, mulai);
-        gain.gain.exponentialRampToValueAtTime(p.volume, mulai + p.durasi * 0.2);
-        gain.gain.exponentialRampToValueAtTime(0.001, mulai + p.durasi);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
 
-        osc.connect(gain);
-        gain.connect(ctx.destination);
-
-        osc.start(mulai);
-        osc.stop(mulai + p.durasi + 0.02);
-      });
+      osc.start(mulai);
+      osc.stop(mulai + 0.19);
     }
 
     var semuaTombol = document.querySelectorAll(".sound-click");
