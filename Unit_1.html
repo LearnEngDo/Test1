@@ -29,6 +29,26 @@
 
   .wrap{max-width:880px;margin:0 auto;padding:18px 16px 60px;}
 
+    /* BACK BUTTON */
+.back-button {
+  display: inline-block;
+  margin: 16px;
+  padding: 8px 16px;
+  background-color: #F4C2C2;
+  border: 2px solid #E098A0;
+  border-radius: 10px;
+  color: #1B3A4B;
+  font-family: 'Trebuchet MS', sans-serif;
+  font-weight: bold;
+  font-size: 14px;
+  text-decoration: none;
+  transition: transform 0.2s;
+}
+
+.back-button:hover {
+  transform: translateX(-4px);
+}
+
   /* HEADER */
   .hero{
     background:linear-gradient(135deg,var(--red) 0%, var(--red-dark) 100%);
@@ -461,6 +481,11 @@
   }
 </style>
 </head>
+
+<a href="https://learnengdo.com/" class="back-button">
+  ← Kembali ke Menu (Back to Menu)
+</a>
+
 <body>
 <div class="wrap">
 
