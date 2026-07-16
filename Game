@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Game Kosakata: Liburan 🧳</title>
+<style>
+  :root{
+    --navy:#1f3a5f; --navy-deep:#12233d;
+    --teal:#2fa89c; --teal-deep:#1f7d74; --teal-tint:#e6f6f4;
+    --yellow:#ffc857; --yellow-deep:#e0a92e; --yellow-tint:#fff7e0;
+    --cream:#f6f9fb; --white:#ffffff; --ink:#233248; --muted:#7488a0;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body{
+    font-family:'Trebuchet MS','Segoe UI',sans-serif;
+    background:
+      radial-gradient(circle at 8% 0%, var(--yellow-tint) 0%, transparent 42%),
+      radial-gradient(circle at 100% 20%, var(--teal-tint) 0%, transparent 45%),
+      var(--cream);
+    color:var(--ink); padding:22px; line-height:1.6;
+  }
+  .wrap{ max-width:980px; margin:0 auto; }
+  header{ text-align:center; margin-bottom:26px; }
+  header h1{ font-size:2.1rem; color:var(--navy); letter-spacing:.5px; }
+  header h1 span{ color:var(--teal-deep); }
+  header p{ color:var(--muted); margin-top:6px; font-size:1rem; }
+
+  .game-nav{ display:flex; gap:10px; justify-content:center; flex-wrap:wrap; margin-bottom:26px; }
+  .game-nav button{
+    background:var(--white); border:2px solid var(--teal); color:var(--navy);
+    padding:9px 18px; border-radius:20px; font-weight:bold; cursor:pointer; font-size:.92rem;
+    font-family:inherit; transition:.2s;
+  }
+  .game-nav button.active{ background:var(--navy); border-color:var(--navy); color:#fff; }
+  .game-nav button:hover{ transform:translateY(-2px); }
+
+  .card{
+    background:var(--white); border-radius:20px; padding:26px 24px; margin-bottom:24px;
+    box-shadow:0 10px 26px rgba(31,58,95,.10); border:2px solid #e4ecf3; display:none;
+  }
+  .card.active{ display:block; }
+  .card h2{ font-size:1.4rem; color:var(--navy); display:flex; align-items:center; gap:10px; flex-wrap:wrap; margin-bottom:6px;}
+  .badge{ background:var(--yellow); color:var(--navy-deep); font-size:.75rem; padding:3px 12px; border-radius:20px; font-weight:bold;}
+  .hint{ font-size:.88rem; color:var(--muted); margin-bottom:16px; }
+
+  /* ===== SECTION 1: SPEED QUIZ ===== */
+  .quiz-top{ display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; flex-wrap:wrap; gap:10px;}
+  .quiz-stat{ background:var(--teal-tint); color:var(--teal-deep); font-weight:bold; padding:6px 14px; border-radius:14px; font-size:.9rem;}
+  .timerbar-outer{ background:#eef2f6; border-radius:20px; height:10px; overflow:hidden; margin-bottom:20px;}
+  .timerbar-inner{ height:100%; background:linear-gradient(90deg,var(--teal),var(--yellow)); width:100%; transition:width .1s linear;}
+  .quiz-word{ text-align:center; font-size:2rem; font-weight:bold; color:var(--navy); background:var(--teal-tint);
+    border-radius:16px; padding:26px 10px; margin-bottom:20px; border:2px dashed var(--teal);}
+  .quiz-options{ display:grid; grid-template-columns:1fr 1fr; gap:12px;}
+  @media(max-width:560px){ .quiz-options{ grid-template-columns:1fr; } }
+  .qopt{ background:var(--white); border:2px solid #d9e3ec; border-radius:14px; padding:14px 16px; cursor:pointer;
+    font-size:1rem; font-family:inherit; text-align:left; transition:.15s; color:var(--ink);}
+  .qopt:hover{ border-color:var(--teal); transform:translateY(-2px); }
+  .qopt.correct{ background:#dff5df; border-color:#4caf50; color:#1e5c1e; font-weight:bold;}
+  .qopt.wrong{ background:#fbdede; border-color:#e05353; color:#7a1f1f;}
+  .qopt[disabled]{ cursor:default; }
+  .quiz-feedback{ text-align:center; font-weight:bold; min-height:28px; margin-top:14px; font-size:1.05rem;}
+  .quiz-end{ text-align:center; padding:30px 10px; }
+  .quiz-end .big{ font-size:2.4rem; margin-bottom:8px;}
+  .primary-btn{ background:var(--navy); color:#fff; border:0; padding:11px 26px; border-radius:22px;
+    font-weight:bold; cursor:pointer; font-size:1rem; font-family:inherit; margin-top:8px;}
+  .primary-btn:hover{ background:var(--navy-deep); }
+
+  /* ===== SECTION 2: SUSUN KATA ===== */
+  .scr-progress{ text-align:center; color:var(--muted); font-size:.85rem; margin-bottom:10px; font-weight:bold;}
+  .scr-hint-box{ text-align:center; margin-bottom:18px; }
+  .scr-hint-btn{ background:var(--yellow-tint); border:2px solid var(--yellow); color:var(--yellow-deep);
+    padding:6px 16px; border-radius:14px; font-weight:bold; cursor:pointer; font-family:inherit; font-size:.85rem;}
+  .scr-hint-text{ display:none; margin-top:8px; color:var(--navy); font-style:italic; }
+  .scr-hint-text.show{ display:block; }
+  .slots{ display:flex; flex-wrap:wrap; justify-content:center; gap:6px; margin-bottom:22px; min-height:52px;}
+  .slot-group{ display:flex; gap:6px; }
+  .slot{ width:38px; height:44px; border-bottom:3px solid var(--navy); display:flex; align-items:center;
+    justify-content:center; font-size:1.3rem; font-weight:bold; color:var(--navy); cursor:pointer; }
+  .slot.filled{ background:var(--teal-tint); border-radius:8px 8px 0 0; }
+  .tiles{ display:flex; flex-wrap:wrap; justify-content:center; gap:9px; margin-bottom:20px;}
+  .tile-letter{ background:var(--navy); color:#fff; width:44px; height:44px; border-radius:10px;
+    display:flex; align-items:center; justify-content:center; font-size:1.2rem; font-weight:bold; cursor:pointer;
+    box-shadow:0 3px 0 var(--navy-deep); transition:.12s; user-select:none;}
+  .tile-letter:hover{ transform:translateY(-2px); }
+  .tile-letter.used{ visibility:hidden; }
+  .scr-actions{ text-align:center; display:flex; gap:10px; justify-content:center; flex-wrap:wrap;}
+  .secondary-btn{ background:#fff; border:2px solid var(--navy); color:var(--navy); padding:10px 22px;
+    border-radius:20px; font-weight:bold; cursor:pointer; font-family:inherit; font-size:.95rem;}
+  .scr-feedback{ text-align:center; font-weight:bold; min-height:28px; margin-top:14px; font-size:1.05rem;}
+
+  /* ===== SECTION 3: BINGO ===== */
+  .bingo-layout{ display:flex; gap:24px; flex-wrap:wrap; }
+  .bingo-board{ flex:1 1 320px; }
+  .bingo-grid{ display:grid; grid-template-columns:repeat(4,1fr); gap:7px; }
+  .bcell{ aspect-ratio:1/1; background:var(--white); border:2px solid #d9e3ec; border-radius:10px;
+    display:flex; align-items:center; justify-content:center; text-align:center; font-weight:bold;
+    font-size:.72rem; padding:4px; cursor:pointer; color:var(--navy); transition:.15s; line-height:1.15;}
+  .bcell:hover{ border-color:var(--teal); }
+  .bcell.marked{ background:var(--teal); color:#fff; border-color:var(--teal-deep); }
+  .bcell.bingo-line{ background:var(--yellow); color:var(--navy-deep); border-color:var(--yellow-deep); }
+  .bingo-caller{ flex:1 1 240px; background:var(--teal-tint); border-radius:16px; padding:18px; text-align:center;}
+  .bingo-caller .called-word{ font-size:1.3rem; font-weight:bold; color:var(--teal-deep); min-height:70px;
+    display:flex; align-items:center; justify-content:center; padding:10px;}
+  .bingo-log{ margin-top:12px; font-size:.8rem; color:var(--muted); max-height:90px; overflow-y:auto; text-align:left;}
+  .bingo-status{ text-align:center; font-weight:bold; margin-top:16px; min-height:26px; font-size:1.05rem; color:var(--navy);}
+
+  /* ===== SECTION 4: TANGKAP KATA (CATCH GAME) ===== */
+  .catch-top{ display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:14px;}
+  .catch-target{ background:var(--yellow-tint); border:2px dashed var(--yellow-deep); border-radius:14px;
+    padding:10px 18px; font-weight:bold; color:var(--navy); font-size:1.05rem; flex:1 1 240px; text-align:center;}
+  .catch-label{ color:#e05353; font-size:.72rem; font-weight:bold; letter-spacing:.3px;}
+  .catch-stat{ background:var(--teal-tint); color:var(--teal-deep); font-weight:bold; padding:6px 14px; border-radius:14px; font-size:.9rem;}
+  .catch-lives{ font-size:1.05rem;}
+
+  .catch-arena{ position:relative; height:380px; border-radius:18px; overflow:hidden; margin-bottom:12px;
+    background:linear-gradient(180deg,#eaf7f5 0%,#f5fbe8 65%,#d9efc9 100%); border:3px solid var(--teal); }
+  .catch-ground{ position:absolute; bottom:0; left:0; right:0; height:34px; background:var(--teal); opacity:.25;}
+  .falling-word{ position:absolute; top:-40px; background:var(--white); border:2px solid var(--navy);
+    border-radius:12px; padding:8px 14px; font-weight:bold; color:var(--navy); cursor:default; font-size:.92rem;
+    box-shadow:0 4px 10px rgba(31,58,95,.15); transform:translateX(-50%); user-select:none; white-space:nowrap;}
+  .falling-word.pop{ animation:popOut .28s forwards; }
+  @keyframes popOut{ to{ transform:translateX(-50%) scale(1.7); opacity:0; } }
+  .falling-word.shake{ animation:shakeWord .28s; background:#fbdede; }
+  @keyframes shakeWord{ 0%,100%{transform:translateX(-50%);} 30%{transform:translateX(-60%);} 70%{transform:translateX(-40%);} }
+
+  .catcher{ position:absolute; bottom:2px; font-size:2.3rem; transform:translateX(-50%); z-index:5;}
+  .catcher.hop{ animation:hop .3s ease; }
+  @keyframes hop{ 0%{ transform:translateX(-50%) translateY(0);} 40%{ transform:translateX(-50%) translateY(-26px);} 100%{ transform:translateX(-50%) translateY(0);} }
+
+  .catch-controls{ display:flex; justify-content:center; gap:16px; }
+  .ctrl-btn{ background:var(--navy); color:#fff; border:0; width:64px; height:52px; border-radius:14px;
+    font-size:1.4rem; font-weight:bold; cursor:pointer; box-shadow:0 3px 0 var(--navy-deep); user-select:none; touch-action:none;}
+  .ctrl-btn:active{ transform:translateY(2px); box-shadow:0 1px 0 var(--navy-deep); }
+
+  .catch-overlay{ position:absolute; inset:0; background:rgba(18,35,61,.85); color:#fff; display:flex;
+    flex-direction:column; align-items:center; justify-content:center; text-align:center; gap:10px; padding:24px; z-index:10;}
+  .catch-overlay.hide{ display:none; }
+  .catch-overlay .big{ font-size:1.8rem; }
+  .catch-overlay p{ max-width:340px; color:#dce6f2; font-size:.92rem;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>🧳 Main <span>Kosakata</span> Liburan!</h1>
+    <p>3 game seru buat latihan kata-kata perjalanan (3 fun games to practice travel vocabulary)</p>
+  </header>
+
+  <div class="game-nav">
+    <button class="active" data-target="quiz">⏱️ Tebak Cepat</button>
+    <button data-target="scramble">🔤 Susun Kata</button>
+    <button data-target="bingo">🎯 Bingo Kosakata</button>
+    <button data-target="catch">🐸 Tangkap Kata</button>
+  </div>
+
+  <!-- ===== GAME 1: TEBAK CEPAT (SPEED QUIZ) ===== -->
+  <div class="card active" id="quiz">
+    <h2>⏱️ Tebak Cepat <span class="badge">10 detik per soal</span></h2>
+    <p class="hint">Pilih arti bahasa Inggris yang benar sebelum waktu habis! (Pick the correct English meaning before time runs out!)</p>
+    <div id="quizBody"></div>
+  </div>
+
+  <!-- ===== GAME 2: SUSUN KATA (WORD SCRAMBLE) ===== -->
+  <div class="card" id="scramble">
+    <h2>🔤 Susun Kata <span class="badge">Klik huruf, bentuk kata</span></h2>
+    <p class="hint">Klik huruf-huruf yang teracak untuk menyusun kata Indonesia yang benar. Klik huruf terisi untuk membatalkan. (Click the scrambled letters to spell the correct Indonesian word. Click a filled slot to undo.)</p>
+    <div class="scr-progress" id="scrProgress"></div>
+    <div class="scr-hint-box">
+      <button class="scr-hint-btn" id="scrHintBtn">💡 Lihat arti (Show meaning)</button>
+      <div class="scr-hint-text" id="scrHintText"></div>
+    </div>
+    <div class="slots" id="scrSlots"></div>
+    <div class="tiles" id="scrTiles"></div>
+    <div class="scr-actions">
+      <button class="primary-btn" id="scrCheckBtn">✅ Periksa</button>
+      <button class="secondary-btn" id="scrClearBtn">↩️ Ulang Susun</button>
+      <button class="secondary-btn" id="scrSkipBtn">⏭️ Lewati</button>
+    </div>
+    <div class="scr-feedback" id="scrFeedback"></div>
+  </div>
+
+  <!-- ===== GAME 3: BINGO KOSAKATA ===== -->
+  <div class="card" id="bingo">
+    <h2>🎯 Bingo Kosakata <span class="badge">Guru panggil, murid klik</span></h2>
+    <p class="hint">Guru klik "Panggil Kata" untuk memunculkan arti bahasa Inggris. Murid klik kata Indonesia yang cocok di papan! (Teacher clicks "Call word" to show an English meaning. Student clicks the matching Indonesian word on the board!)</p>
+    <div class="bingo-layout">
+      <div class="bingo-board">
+        <div class="bingo-grid" id="bingoGrid"></div>
+      </div>
+      <div class="bingo-caller">
+        <div style="font-weight:bold;color:var(--navy);margin-bottom:6px;">Kata yang dipanggil:</div>
+        <div class="called-word" id="calledWord">👇 Klik tombol di bawah</div>
+        <button class="primary-btn" id="callBtn">🔔 Panggil Kata</button>
+        <button class="secondary-btn" id="bingoResetBtn" style="margin-top:8px;">🔄 Papan Baru</button>
+        <div class="bingo-log" id="bingoLog"></div>
+      </div>
+    </div>
+    <div class="bingo-status" id="bingoStatus"></div>
+  </div>
+
+  <!-- ===== GAME 4: TANGKAP KATA (CATCH GAME) ===== -->
+  <div class="card" id="catch">
+    <h2>🐸 Tangkap Kata <span style="font-weight:normal;font-size:.8rem;color:var(--muted);">(Catch the Word)</span> <span class="badge">Gerakkan kodoknya!</span></h2>
+    <p class="hint">Lihat arti bahasa Inggris di atas, lalu gerakkan kodoknya ke kanan/kiri (tombol ◀ ▶ atau tombol panah keyboard) supaya kodok memakan kata Indonesia yang cocok sebelum jatuh ke tanah! Kalau kodok makan kata yang salah, nyawa berkurang. (Watch the English meaning above, then move the frog left/right so it eats the matching Indonesian word before it lands! Eating the wrong word costs a life.)</p>
+    <div class="catch-top">
+      <div class="catch-target" id="catchTargetDisplay">Klik "Mulai Main" untuk mulai!</div>
+      <span class="catch-stat" id="catchProgressDisplay">📦 0 / 24</span>
+      <span class="catch-stat catch-lives" id="catchLivesDisplay">❤️❤️❤️❤️</span>
+    </div>
+    <div class="catch-arena" id="catchArena">
+      <div class="catch-ground"></div>
+      <div class="catcher" id="catcher" style="left:50%;">🐸</div>
+      <div class="catch-overlay" id="catchOverlay">
+        <div class="big">🐸 Catch the Word!</div>
+        <p>Indonesian words will fall from the top. Move the frog left/right so it eats the word that matches the meaning shown, until all 24 words are caught!</p>
+        <button class="primary-btn" id="catchStartBtn">▶️ Mulai Main</button>
+      </div>
+    </div>
+    <div class="catch-controls">
+      <button class="ctrl-btn" id="catchLeftBtn">◀</button>
+      <button class="ctrl-btn" id="catchRightBtn">▶</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const VOCAB = [
+  ["Menginap","To stay the night"],["Lihat","To see"],
+  ["Sewa","To rent"],["Habiskan","To spend (time)"],["Santai","To chill"],
+  ["Naik","To take a transportation"],["Biaya","The cost"],
+  ["Bersepeda","To ride a bicycle"],["Turun","To get off / go down"],["Jemput","To pick up"],
+  ["Menikmati","To enjoy"],["Berfoto","To take a picture"],["Hari pertama","The first day"],
+  ["Tiket masuk","Entrance ticket"],["Mampir","To stop by"],
+  ["Jalan-jalan","Walk around / Hangout"],["Tidak cukup","Not enough"],["Butuh","Need"],
+  ["Kasih","Give"],["Nyaman","Comfortable"],["Ganti","Change"],
+  ["Kira-kira","Approximately"],["Antar","To deliver / drop off"],["Akhir-akhir ini","Recently"]
+];
+
+function shuffle(arr){ return [...arr].sort(()=>Math.random()-.5); }
+
+/* ================= NAV ================= */
+document.querySelectorAll('.game-nav button').forEach(btn=>{
+  btn.onclick=()=>{
+    document.querySelectorAll('.game-nav button').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('.card').forEach(c=>c.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById(btn.dataset.target).classList.add('active');
+    if(typeof pauseCatchGame==='function') pauseCatchGame();
+    if(btn.dataset.target==='catch' && typeof resumeCatchGame==='function') resumeCatchGame();
+  };
+});
+
+/* ================= GAME 1: SPEED QUIZ ================= */
+let quizQueue=[], quizIdx=0, quizScore=0, quizStreak=0, quizTimer=null, quizTimeLeft=0;
+const QUIZ_TIME=10;
+
+function startQuiz(){
+  quizQueue=shuffle(VOCAB);
+  quizIdx=0; quizScore=0; quizStreak=0;
+  renderQuizQuestion();
+}
+function renderQuizQuestion(){
+  clearInterval(quizTimer);
+  const body=document.getElementById('quizBody');
+  if(quizIdx>=quizQueue.length){
+    body.innerHTML=`<div class="quiz-end">
+      <div class="big">🏆</div>
+      <div style="font-size:1.3rem;font-weight:bold;color:var(--navy);">Selesai! Skor kamu: ${quizScore} / ${quizQueue.length}</div>
+      <button class="primary-btn" onclick="startQuiz()">🔁 Main Lagi</button>
+    </div>`;
+    return;
+  }
+  const item=quizQueue[quizIdx];
+  const distractors=shuffle(VOCAB.filter(v=>v[0]!==item[0])).slice(0,3).map(v=>v[1]);
+  const options=shuffle([item[1],...distractors]);
+  body.innerHTML=`
+    <div class="quiz-top">
+      <span class="quiz-stat">Soal ${quizIdx+1} / ${quizQueue.length}</span>
+      <span class="quiz-stat">⭐ Skor: ${quizScore}</span>
+      <span class="quiz-stat">🔥 Streak: ${quizStreak}</span>
+    </div>
+    <div class="timerbar-outer"><div class="timerbar-inner" id="timerbarInner"></div></div>
+    <div class="quiz-word">${item[0]}</div>
+    <div class="quiz-options" id="quizOptions"></div>
+    <div class="quiz-feedback" id="quizFeedback"></div>`;
+  const optWrap=document.getElementById('quizOptions');
+  options.forEach(opt=>{
+    const b=document.createElement('button');
+    b.className='qopt'; b.textContent=opt;
+    b.onclick=()=>answerQuiz(b,opt,item[1]);
+    optWrap.appendChild(b);
+  });
+  quizTimeLeft=QUIZ_TIME;
+  const bar=document.getElementById('timerbarInner');
+  bar.style.width='100%';
+  quizTimer=setInterval(()=>{
+    quizTimeLeft-=0.1;
+    bar.style.width=Math.max(0,(quizTimeLeft/QUIZ_TIME*100))+'%';
+    if(quizTimeLeft<=0){
+      clearInterval(quizTimer);
+      answerQuiz(null,null,item[1]);
+    }
+  },100);
+}
+function answerQuiz(btn,chosen,correct){
+  clearInterval(quizTimer);
+  const opts=document.querySelectorAll('.qopt');
+  opts.forEach(o=>{
+    o.disabled=true;
+    if(o.textContent===correct) o.classList.add('correct');
+    else if(o===btn) o.classList.add('wrong');
+  });
+  const fb=document.getElementById('quizFeedback');
+  if(chosen===correct){
+    quizScore++; quizStreak++;
+    fb.textContent = quizStreak>=3 ? `🔥 Benar! Streak x${quizStreak}!` : '✅ Benar!';
+    fb.style.color='#2e7d32';
+  } else {
+    quizStreak=0;
+    fb.textContent = chosen===null ? `⏰ Waktu habis! Jawaban: ${correct}` : `❌ Kurang tepat. Jawaban: ${correct}`;
+    fb.style.color='#c23b6a';
+  }
+  setTimeout(()=>{ quizIdx++; renderQuizQuestion(); },1400);
+}
+startQuiz();
+
+/* ================= GAME 2: SUSUN KATA (SCRAMBLE) ================= */
+let scrQueue=[], scrIdx=0, scrSlotEls=[], scrTileEls=[], scrFilled=[];
+
+function startScramble(){
+  scrQueue=shuffle(VOCAB);
+  scrIdx=0;
+  renderScramble();
+}
+function renderScramble(){
+  document.getElementById('scrFeedback').textContent='';
+  if(scrIdx>=scrQueue.length){ scrQueue=shuffle(VOCAB); scrIdx=0; }
+  const [word,meaning]=scrQueue[scrIdx];
+  document.getElementById('scrProgress').textContent=`Kata ${scrIdx+1} dari ${scrQueue.length}`;
+  const hintText=document.getElementById('scrHintText');
+  hintText.textContent=meaning; hintText.classList.remove('show');
+
+  // build slots grouped by word (spaces become gaps)
+  const slotsWrap=document.getElementById('scrSlots');
+  slotsWrap.innerHTML='';
+  scrSlotEls=[];
+  const words=word.split(' ');
+  words.forEach((w,wi)=>{
+    const group=document.createElement('div');
+    group.className='slot-group';
+    [...w].forEach(()=>{
+      const s=document.createElement('div');
+      s.className='slot';
+      s.onclick=()=>undoSlot(s);
+      group.appendChild(s);
+      scrSlotEls.push(s);
+    });
+    slotsWrap.appendChild(group);
+    if(wi<words.length-1){
+      const gap=document.createElement('div'); gap.style.width='14px';
+      slotsWrap.appendChild(gap);
+    }
+  });
+
+  // build shuffled letter tiles (letters only, no spaces)
+  const letters=shuffle([...word.replace(/ /g,'')]);
+  const tilesWrap=document.getElementById('scrTiles');
+  tilesWrap.innerHTML='';
+  scrTileEls=[];
+  scrFilled=new Array(scrSlotEls.length).fill(null);
+  letters.forEach((ch,i)=>{
+    const t=document.createElement('div');
+    t.className='tile-letter'; t.textContent=ch; t.dataset.idx=i;
+    t.onclick=()=>fillSlot(t,ch);
+    tilesWrap.appendChild(t);
+    scrTileEls.push(t);
+  });
+}
+function fillSlot(tile,ch){
+  if(tile.classList.contains('used')) return;
+  const nextIdx=scrFilled.findIndex(v=>v===null);
+  if(nextIdx===-1) return;
+  scrFilled[nextIdx]=tile;
+  tile.classList.add('used');
+  const slot=scrSlotEls[nextIdx];
+  slot.textContent=ch;
+  slot.classList.add('filled');
+  slot.dataset.tileIdx=tile.dataset.idx;
+}
+function undoSlot(slot){
+  const idx=scrSlotEls.indexOf(slot);
+  if(scrFilled[idx]===null) return;
+  const tile=scrFilled[idx];
+  tile.classList.remove('used');
+  scrFilled[idx]=null;
+  slot.textContent=''; slot.classList.remove('filled');
+}
+document.getElementById('scrHintBtn').onclick=()=>{
+  document.getElementById('scrHintText').classList.toggle('show');
+};
+document.getElementById('scrClearBtn').onclick=()=>{
+  scrSlotEls.forEach((s,i)=>{ if(scrFilled[i]){ scrFilled[i].classList.remove('used'); } s.textContent=''; s.classList.remove('filled'); });
+  scrFilled=new Array(scrSlotEls.length).fill(null);
+};
+document.getElementById('scrSkipBtn').onclick=()=>{ scrIdx++; renderScramble(); };
+document.getElementById('scrCheckBtn').onclick=()=>{
+  const answer=scrSlotEls.map(s=>s.textContent||'').join('');
+  const target=scrQueue[scrIdx][0].replace(/ /g,'');
+  const fb=document.getElementById('scrFeedback');
+  if(answer.length<target.length){
+    fb.textContent='✏️ Lengkapi dulu semua kotaknya!'; fb.style.color='#c23b6a'; return;
+  }
+  if(answer.toLowerCase()===target.toLowerCase()){
+    fb.textContent='🎉 Benar! Kata berikutnya...'; fb.style.color='#2e7d32';
+    setTimeout(()=>{ scrIdx++; renderScramble(); },1200);
+  } else {
+    fb.textContent='❌ Belum tepat, coba lagi!'; fb.style.color='#c23b6a';
+  }
+};
+startScramble();
+
+/* ================= GAME 3: BINGO ================= */
+let bingoCard=[], bingoCalled=[], bingoCallQueue=[], bingoMarked=[];
+const BINGO_SIZE=24;
+const BINGO_COLS=4;
+const BINGO_ROWS=6;
+
+function startBingo(){
+  const pool=shuffle(VOCAB).slice(0,BINGO_SIZE);
+  bingoCard=pool;
+  bingoCallQueue=shuffle(pool);
+  bingoCalled=[];
+  bingoMarked=new Array(BINGO_SIZE).fill(false);
+  renderBingoGrid();
+  document.getElementById('calledWord').textContent='👇 Klik tombol di bawah';
+  document.getElementById('bingoLog').innerHTML='';
+  document.getElementById('bingoStatus').textContent='';
+  document.getElementById('callBtn').disabled=false;
+  document.getElementById('callBtn').textContent='🔔 Panggil Kata';
+}
+function renderBingoGrid(){
+  const grid=document.getElementById('bingoGrid');
+  grid.innerHTML='';
+  bingoCard.forEach((v,i)=>{
+    const c=document.createElement('div');
+    c.className='bcell'; c.textContent=v[0]; c.dataset.idx=i;
+    c.onclick=()=>markBingo(i,c);
+    grid.appendChild(c);
+  });
+}
+function markBingo(i,el){
+  if(bingoMarked[i]) return;
+  const currentCallIdx=bingoCallQueue.length - (BINGO_SIZE - bingoCalled.length) ; // not used
+  const lastCalled=bingoCalled[bingoCalled.length-1];
+  if(!lastCalled){ 
+    document.getElementById('bingoStatus').textContent='🔔 Panggil kata dulu sebelum menjawab!';
+    document.getElementById('bingoStatus').style.color='#c23b6a';
+    return;
+  }
+  if(bingoCard[i][0]===lastCalled[0]){
+    bingoMarked[i]=true;
+    el.classList.add('marked');
+    checkBingoWin();
+  } else {
+    el.style.background='#fbdede';
+    setTimeout(()=>{ if(!bingoMarked[i]) el.style.background=''; },500);
+  }
+}
+document.getElementById('callBtn').onclick=()=>{
+  if(bingoCalled.length>=bingoCallQueue.length){
+    document.getElementById('calledWord').textContent='✅ Semua kata sudah dipanggil!';
+    document.getElementById('callBtn').disabled=true;
+    return;
+  }
+  const next=bingoCallQueue[bingoCalled.length];
+  bingoCalled.push(next);
+  document.getElementById('calledWord').textContent=`💬 ${next[1]}`;
+  const log=document.getElementById('bingoLog');
+  const line=document.createElement('div');
+  line.textContent=`${bingoCalled.length}. ${next[1]}`;
+  log.prepend(line);
+};
+document.getElementById('bingoResetBtn').onclick=startBingo;
+
+function checkBingoWin(){
+  const lines=[];
+  for(let r=0;r<BINGO_ROWS;r++){
+    const row=[]; for(let c=0;c<BINGO_COLS;c++) row.push(r*BINGO_COLS+c);
+    lines.push(row);
+  }
+  for(let c=0;c<BINGO_COLS;c++){
+    const col=[]; for(let r=0;r<BINGO_ROWS;r++) col.push(r*BINGO_COLS+c);
+    lines.push(col);
+  }
+  const won=lines.find(line=>line.every(idx=>bingoMarked[idx]));
+  if(won){
+    won.forEach(idx=>{
+      document.querySelector(`.bcell[data-idx="${idx}"]`).classList.add('bingo-line');
+    });
+    document.getElementById('bingoStatus').textContent='🏆 BINGO! Selamat!';
+    document.getElementById('bingoStatus').style.color='#2e7d32';
+  }
+}
+startBingo();
+
+/* ================= GAME 4: TANGKAP KATA (CATCH GAME) ================= */
+const MAX_LIVES=4;
+const TOTAL_WORDS=24;
+let catchCaught=0, catchLives=MAX_LIVES, catchTarget=null;
+let catchRemaining=[]; // words not yet successfully caught
+let catchRunning=false, catchTabActive=false;
+let catchObjects=[]; // {el, x(%), y(px), speed(px/sec), isTarget, eaten}
+let catchSpawnTimer=null, catchLoopId=null, catchLastTime=0;
+let catcherX=50, movingLeft=false, movingRight=false;
+const CATCHER_SPEED=62; // percent per second
+const EAT_ZONE_TOP_RATIO=0.62; // fraction of arena height where eating becomes possible
+const EAT_TOLERANCE=9; // percent horizontal tolerance
+
+const catchArena=document.getElementById('catchArena');
+const catcherEl=document.getElementById('catcher');
+const catchOverlay=document.getElementById('catchOverlay');
+const catchTargetDisplay=document.getElementById('catchTargetDisplay');
+const catchProgressDisplay=document.getElementById('catchProgressDisplay');
+const catchLivesDisplay=document.getElementById('catchLivesDisplay');
+const catchLeftBtn=document.getElementById('catchLeftBtn');
+const catchRightBtn=document.getElementById('catchRightBtn');
+
+function updateCatchHUD(){
+  catchProgressDisplay.textContent=`📦 ${catchCaught} / ${TOTAL_WORDS}`;
+  catchLivesDisplay.textContent='❤️'.repeat(catchLives)+'🖤'.repeat(MAX_LIVES-catchLives);
+}
+function pickCatchTarget(){
+  if(catchRemaining.length===0){ winCatchGame(); return; }
+  let next;
+  do{ next=catchRemaining[Math.floor(Math.random()*catchRemaining.length)]; }
+  while(catchRemaining.length>1 && catchTarget && next[0]===catchTarget[0]);
+  catchTarget=next;
+  catchTargetDisplay.innerHTML=`🎯 Tangkap <span class="catch-label">(catch)</span>: ${catchTarget[1]}`;
+}
+function catchSpawnInterval(){ return Math.max(650, 1450-catchCaught*30); }
+function catchSpeed(){ return Math.min(300, 105+catchCaught*7); }
+
+function spawnCatchWord(){
+  const targetAlreadyFalling=catchObjects.some(o=>o.isTarget);
+  let word, isTarget;
+  if(!targetAlreadyFalling && Math.random()<0.5){
+    word=catchTarget[0]; isTarget=true;
+  } else {
+    const distractors=VOCAB.filter(v=>v[0]!==catchTarget[0]);
+    word=distractors[Math.floor(Math.random()*distractors.length)][0]; isTarget=false;
+  }
+  const el=document.createElement('div');
+  el.className='falling-word';
+  el.textContent=word;
+  const xPct=6+Math.random()*80;
+  el.style.left=xPct+'%';
+  el.style.top='-40px';
+  catchArena.appendChild(el);
+  const obj={el, x:xPct, y:-40, speed:catchSpeed(), isTarget, eaten:false};
+  catchObjects.push(obj);
+}
+function hopCatcher(){
+  catcherEl.classList.remove('hop');
+  void catcherEl.offsetWidth;
+  catcherEl.classList.add('hop');
+}
+function flashArena(){
+  catchArena.style.boxShadow='inset 0 0 0 6px #e05353';
+  setTimeout(()=>{ catchArena.style.boxShadow=''; },250);
+}
+function removeCatchObj(obj){
+  catchObjects=catchObjects.filter(o=>o!==obj);
+  setTimeout(()=>{ if(obj.el && obj.el.parentNode) obj.el.remove(); },300);
+}
+function handleEaten(obj){
+  hopCatcher();
+  if(obj.isTarget){
+    catchCaught++;
+    catchRemaining=catchRemaining.filter(v=>v[0]!==catchTarget[0]);
+    obj.el.classList.add('pop');
+    removeCatchObj(obj);
+    updateCatchHUD();
+    pickCatchTarget();
+  } else {
+    catchLives--;
+    obj.el.classList.add('shake');
+    removeCatchObj(obj);
+    updateCatchHUD();
+    flashArena();
+    if(catchLives<=0) loseCatchGame();
+  }
+}
+function handleMissed(obj){
+  if(obj.isTarget){
+    catchLives--;
+    flashArena();
+    removeCatchObj(obj);
+    updateCatchHUD();
+    if(catchLives<=0){ loseCatchGame(); return; }
+    pickCatchTarget();
+  } else {
+    removeCatchObj(obj);
+  }
+}
+function catchGameLoop(ts){
+  if(!catchTabActive || !catchRunning) return;
+  const dt=Math.min(0.05,(ts-catchLastTime)/1000||0);
+  catchLastTime=ts;
+  if(movingLeft) catcherX-=CATCHER_SPEED*dt;
+  if(movingRight) catcherX+=CATCHER_SPEED*dt;
+  catcherX=Math.max(4,Math.min(96,catcherX));
+  catcherEl.style.left=catcherX+'%';
+
+  const arenaHeight=catchArena.clientHeight;
+  const eatZoneTop=arenaHeight*EAT_ZONE_TOP_RATIO;
+  [...catchObjects].forEach(obj=>{
+    if(obj.eaten) return;
+    obj.y += obj.speed*dt;
+    obj.el.style.top=obj.y+'px';
+    if(obj.y >= eatZoneTop && obj.y < arenaHeight-22){
+      if(Math.abs(obj.x-catcherX) < EAT_TOLERANCE){
+        obj.eaten=true;
+        handleEaten(obj);
+        return;
+      }
+    }
+    if(obj.y >= arenaHeight-22){
+      obj.eaten=true;
+      handleMissed(obj);
+    }
+  });
+  catchLoopId=requestAnimationFrame(catchGameLoop);
+}
+function startCatchGame(){
+  catchArena.querySelectorAll('.falling-word').forEach(el=>el.remove());
+  catchObjects=[]; catchCaught=0; catchLives=MAX_LIVES; catchTarget=null;
+  catchRemaining=shuffle(VOCAB);
+  catcherX=50; catcherEl.style.left='50%';
+  updateCatchHUD();
+  pickCatchTarget();
+  catchOverlay.classList.add('hide');
+  catchRunning=true; catchTabActive=true;
+  refreshCatchSpawnPace();
+  catchLastTime=performance.now();
+  cancelAnimationFrame(catchLoopId);
+  catchLoopId=requestAnimationFrame(catchGameLoop);
+}
+function refreshCatchSpawnPace(){
+  clearInterval(catchSpawnTimer);
+  catchSpawnTimer=setInterval(()=>{ if(catchRunning) spawnCatchWord(); },catchSpawnInterval());
+}
+function winCatchGame(){
+  catchRunning=false;
+  clearInterval(catchSpawnTimer);
+  cancelAnimationFrame(catchLoopId);
+  catchOverlay.classList.remove('hide');
+  catchOverlay.innerHTML=`<div class="big">🏆 Semua Tertangkap!</div>
+    <p>Kodok berhasil makan semua ${TOTAL_WORDS} kata dengan sisa <strong style="color:#ffc857;">${catchLives}</strong> nyawa!</p>
+    <button class="primary-btn" id="catchStartBtn">🔁 Main Lagi</button>`;
+  document.getElementById('catchStartBtn').onclick=startCatchGame;
+}
+function loseCatchGame(){
+  catchRunning=false;
+  clearInterval(catchSpawnTimer);
+  cancelAnimationFrame(catchLoopId);
+  catchOverlay.classList.remove('hide');
+  catchOverlay.innerHTML=`<div class="big">🏁 Selesai!</div>
+    <p>Kata tertangkap: <strong style="color:#ffc857;font-size:1.2rem;">${catchCaught} / ${TOTAL_WORDS}</strong></p>
+    <button class="primary-btn" id="catchStartBtn">🔁 Main Lagi</button>`;
+  document.getElementById('catchStartBtn').onclick=startCatchGame;
+}
+function pauseCatchGame(){
+  catchTabActive=false; movingLeft=false; movingRight=false;
+  clearInterval(catchSpawnTimer);
+  cancelAnimationFrame(catchLoopId);
+}
+function resumeCatchGame(){
+  catchTabActive=true;
+  if(!catchRunning) return;
+  refreshCatchSpawnPace();
+  catchLastTime=performance.now();
+  cancelAnimationFrame(catchLoopId);
+  catchLoopId=requestAnimationFrame(catchGameLoop);
+}
+document.getElementById('catchStartBtn').onclick=startCatchGame;
+
+/* movement controls: buttons (touch/mouse) + keyboard arrows */
+function bindHold(el,onDown,onUp){
+  el.addEventListener('pointerdown',e=>{ e.preventDefault(); onDown(); });
+  el.addEventListener('pointerup',onUp);
+  el.addEventListener('pointerleave',onUp);
+  el.addEventListener('pointercancel',onUp);
+}
+bindHold(catchLeftBtn, ()=>{ movingLeft=true; }, ()=>{ movingLeft=false; });
+bindHold(catchRightBtn, ()=>{ movingRight=true; }, ()=>{ movingRight=false; });
+document.addEventListener('keydown',e=>{
+  if(!catchTabActive) return;
+  if(e.key==='ArrowLeft') movingLeft=true;
+  if(e.key==='ArrowRight') movingRight=true;
+});
+document.addEventListener('keyup',e=>{
+  if(e.key==='ArrowLeft') movingLeft=false;
+  if(e.key==='ArrowRight') movingRight=false;
+});
+</script>
+</body>
+</html>
